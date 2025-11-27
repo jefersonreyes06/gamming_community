@@ -17,7 +17,7 @@ class HomePageState extends State<HomePage>
   Widget build(BuildContext context)
   {
     return Scaffold(
-      backgroundColor: Colors.white24,
+      backgroundColor: Colors.white70,
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         title: const Text("Game Community", style: TextStyle(color: Colors.white),),
@@ -30,7 +30,7 @@ class HomePageState extends State<HomePage>
         children:
         [
           Container(
-            color: Colors.white30,
+            color: Colors.white70,
             padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 10),
 
             child: Row(
@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage>
               crossAxisAlignment: CrossAxisAlignment.center,
 
               children: [
-                Text("data"),
+                Text("Groups"),
                 SizedBox(width: 20),
 
                 Container(
@@ -68,7 +68,7 @@ class HomePageState extends State<HomePage>
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white30,
+        backgroundColor: Colors.white,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
