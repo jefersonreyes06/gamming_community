@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_community/Widgets/stream_builder.dart';
-import 'package:go_router/go_router.dart';
+import 'package:game_community/Widgets/app_bar.dart';
+import 'package:game_community/Widgets/custom_feet.dart';
 
 class HomePage extends StatefulWidget
 {
@@ -12,92 +13,69 @@ class HomePage extends StatefulWidget
 
 class HomePageState extends State<HomePage>
 {
-  int _currentIndex = 0;
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
-      backgroundColor: Colors.white70,
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: const Text("Game Community", style: TextStyle(color: Colors.white),),
+      //backgroundColor: Colors.white70,
+      appBar: Encabezado(backgroundColor: Colors.deepPurpleAccent, title: "Gaming Community",),
+      drawer: Drawer(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+
+            children:
+            [
+              SizedBox(height: 10,),
+              Container(
+                  color: Colors.white70,
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 10),
+
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+
+                      children: [
+                        Text("Groups"),
+                        SizedBox(width: 20),
+
+                        Container(
+                          height: 20,
+                          width: 100,
+
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            textAlignVertical: TextAlignVertical.center,
+
+                            decoration: InputDecoration(
+                                hintText: "Escribe algo...",
+                                border: OutlineInputBorder(),
+                                //alignLabelWithHint: true,
+                                suffixIcon: Icon(Icons.search)
+                            ),
+                          ),
+                        ),
+                      ]
+                  )
+              ),
+
+              Text("Communities", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+              SizedBox(height: 5,),
+              Stream_Builder()
+            ]
+        ),
+        width: 220,
       ),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
 
-        children:
-        [
-          Container(
-            color: Colors.white70,
-            padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 10),
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-
-              children: [
-                Text("Groups"),
-                SizedBox(width: 20),
-
-                Container(
-                  height: 25,
-                  width: 150,
-
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.bottom,
-
-
-                    decoration: InputDecoration(
-                      hintText: "Escribe algo...",
-                      border: OutlineInputBorder(),
-                      alignLabelWithHint: true,
-                      suffixIcon: Icon(Icons.search)
-                    ),
-                  ),
-                ),
-              ]
-            )
-          ),
-          SizedBox(height: 100,),
-
-          Stream_Builder()
-        ]
+        child: Center(
+          child: Text("Let's start to chat in communities where you along!", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+        ),
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          if (index == 0) {
-            context.go("/home");
-          } else if (index == 1) {
-            context.go("/search");
-          } else if (index == 2) {
-            context.go("/login");
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Inicio",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: "Buscar",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Perfil",
-          ),
-        ],
-      )
+      floatingActionButton: FloatingActionButton(onPressed: () {}, child: Icon(Icons.add),),
+      bottomNavigationBar: CustomFeet()
     );
   }
 }

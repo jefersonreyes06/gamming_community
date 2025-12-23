@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:game_community/View/community_page.dart';
 import 'package:game_community/View/home_page.dart';
 import 'package:game_community/View/login_page.dart';
+import 'package:game_community/View/register_page.dart';
+import 'package:game_community/View/search_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'View/profile_page.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async
 {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -22,16 +26,44 @@ class MyApp extends StatelessWidget
   {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        /*redirect: (context, state){
+        redirect: (context, state){
+          final user = FirebaseAuth.instance.currentUser;
           final freeRoutes = ['register'];
 
-          return freeRoutes.contains(state.fullPath) ? null : '/login';
-        },*/
+          if (user == null && !freeRoutes.contains(state.fullPath))
+          {
+            return '/login';
+          }
+
+          return null;
+        },
         initialLocation: '/home',
         routes: [
-          GoRoute(path: '/home', name: 'home', builder: (context, state) => HomePage()),
           GoRoute(path: '/login', name: 'login', builder: (context, state) => LoginPage()),
-          GoRoute(path: '/register', name: 'register', builder: (context, state) => LoginPage()),
+          GoRoute(path: '/register', name: 'register', builder: (context, state) => RegisterPage()),
+          GoRoute(
+              path: '/home',
+              name: 'home',
+              builder: (context, state) => HomePage(),
+          ),
+          GoRoute(path: '/search', name: 'search', builder: (context, state) => SearchPage()),
+          GoRoute(path: '/community:id', name: 'community',
+              builder: (context, state)
+              {
+                try {
+                  final communityId = state.pathParameters['id']!;
+                  final communityData = state.extra as Map<String, dynamic>? ?? {};
+
+                  return CommunityPage(communityId: communityId, communityData: communityData);
+                } catch (e) {
+                  return Scaffold();
+                }
+              }
+          ),
+          GoRoute(
+              path: '/profile',
+              builder: (context, state) => ProfilePage(),
+          )
         ]
       ),
       debugShowCheckedModeBanner: false

@@ -1,92 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:game_community/Widgets/custom_text_field.dart';
 import 'package:game_community/Provider/auth.dart';
-/*
-class LoginPage extends StatelessWidget
+import '../widgets/custom_text_field.dart';
+
+class RegisterPage extends StatefulWidget
 {
-  Auth currentUser = Auth();
+  const RegisterPage({super.key});
 
   @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      /*appBar: AppBar(
-        title: Text("Login"),
-      ),*/
-      body:Container(
-        alignment: Alignment(Alignment.center.x, Alignment.center.y),
-        decoration: BoxDecoration(color: Colors.white),
-
-        child: Container(
-          decoration: BoxDecoration(color: Colors.lightBlue[200], borderRadius: BorderRadius.all(Radius.circular(20))),
-          width: 320,
-          height: 500,
-          padding: EdgeInsets.all(20),
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 15,
-
-            children:
-            [
-              SizedBox(height: 10,),
-              Text("Login", textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-
-              SizedBox(height: 5,),
-              //IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.home)),
-              CustomTextField(label: "Email", borderRadius: 30, height: 38,),
-              CustomTextField(label: "Password", borderRadius: 30, height: 38,),
-              Column(
-                children:
-                [
-                  Text("You don`t have an account? Register now",),
-                  TextButton(onPressed: () => context.go('/register'), child: Text("Click here.", textAlign: TextAlign.start,)),
-                ]
-              ),
-              TextButton(onPressed: () {currentUser.registerUser("jefersonalexanderreyeslopez@gmail.com","Hola1234.", context);}, child: Text("Log In"), style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white)),),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.onetwothree_rounded)),
-                  IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.panorama_photosphere_select_sharp)),
-                  IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.panorama_photosphere_select_sharp)),
-                ],
-              ),
-
-            ]
-          )
-        )
-
-
-
-      ),
-
-    );
-  }
-}*/
-
-
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../Widgets/custom_text_field.dart';
-
-class LoginPage extends StatefulWidget
-{
-  const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
+class _RegisterPageState extends State<RegisterPage>
 {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordController1 = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscurePassword1 = true;
   bool _isLoading = false;
 
   @override
@@ -110,7 +42,7 @@ class _LoginPageState extends State<LoginPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 55),
+                      const SizedBox(height: 60),
                       const Text('Bienvenido',
                           style: TextStyle(
                               fontSize: 30,
@@ -119,16 +51,16 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        'Inicia sesión en tu cuenta',
+                        'Crea una cuenta para continuar',
                         style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 7),
                       CustomTextField(
+                        width: 300,
                         label: 'Correo electrónico',
                         hint: 'ejemplo@gmail.com',
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailController,
-                        width: 320,
                         prefixIcon: Icons.email_outlined,
                         validator: (value)
                         {
@@ -143,16 +75,19 @@ class _LoginPageState extends State<LoginPage>
                       const SizedBox(height: 20),
 
                       // Campo de contraseña
-                      CustomTextField(
+
+                      CustomTextField
+                        (
+                        width: 300,
                         label: 'Contraseña',
                         hint: '••••••••',
+                        hasInfo: true,
                         obscureText: _obscurePassword,
                         controller: _passwordController,
                         prefixIcon: Icons.lock_outlined,
-                        width: 320,
                         suffixIcon: _obscurePassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         onSuffixIconTap: ()
                         {
                           setState(() => _obscurePassword = !_obscurePassword);
@@ -168,39 +103,53 @@ class _LoginPageState extends State<LoginPage>
                           return null;
                         },
                       ),
+
                       const SizedBox(height: 12),
 
-                      // Recordar contraseña / Olvidé contraseña
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            '¿Olvidaste tu contraseña? Haz clic aquí',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 46, 106, 235),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                      // Campo de confirmar contraseña
+                      CustomTextField(
+                        width: 300,
+                        label: 'Confirmar contraseña',
+                        hint: '••••••••',
+                        hasInfo: true,
+                        controller: _passwordController1,
+                        prefixIcon: Icons.lock_outlined,
+                        suffixIcon: _obscurePassword1
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        onSuffixIconTap: ()
+                        {
+                          setState(() {_obscurePassword1 = !_obscurePassword1;});
+                        },
+                        obscureText: _obscurePassword1,
+
+                        validator: (value)
+                        {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingresa tu contraseña';
+                          }
+                          if (value.length < 6) {
+                            return 'La contraseña debe tener al menos 6 caracteres';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 20),
 
-                      // Botón de inicio de sesión
+                      // Botón de Registrarse
                       SizedBox(
                         width: double.infinity,
                         height: 48,
-                        child: ElevatedButton
-                          (
+                        child: ElevatedButton(
                           onPressed: ()
                           {
+                            Auth auth = Auth();
 
-
-                            final Auth auth = Auth  ();
-                            auth.SignInWithEmailAndPassword(_emailController.text, _passwordController.text, context);
-
-                            //auth.registerUser(_emailController.text, _passwordController.text, context);
+                            if (_passwordController.text == _passwordController1.text)
+                            {
+                              print("Funciona, usuario puede registrarse");
+                              auth.registerUser(_emailController.text, _passwordController.text, context);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(255, 46, 106, 235),
@@ -219,7 +168,7 @@ class _LoginPageState extends State<LoginPage>
                             ),
                           )
                               : const Text(
-                            'Iniciar sesión',
+                            'Registrarse',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -267,6 +216,8 @@ class _LoginPageState extends State<LoginPage>
                           onPressed: () async
                           {
                             final user = await Auth().SignInWithGoogle(context);
+
+                            //context.go('/home');
                           },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(
@@ -301,9 +252,9 @@ class _LoginPageState extends State<LoginPage>
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            context.push('/register');
+                            context.go('/login');
                           },
-                          child: Text('¿No tienes cuenta? Registrate'),
+                          child: Text('¿Ya tienes una cuenta? Inicia sesion aquí'),
                         ),
                       ),
                     ],

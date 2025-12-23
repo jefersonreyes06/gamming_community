@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget
   final bool obscureText;
   final int maxLines;
   final int minLines;
+  final double fontSize;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
@@ -19,6 +20,7 @@ class CustomTextField extends StatefulWidget
   final Color focusedBorderColor;
   final Color filledColor;
   final double height;
+  final double width;
   final bool hasInfo;
 
   const CustomTextField({
@@ -41,6 +43,8 @@ class CustomTextField extends StatefulWidget
     this.filledColor = const Color(0xFFFAFAFA),
     this.hasInfo = false,
     this.height = 35.00,
+    this.width = 150.00,
+    this.fontSize = 12,
   });
 
   @override
@@ -72,6 +76,7 @@ class _CustomTextFieldState extends State<CustomTextField>
   Widget build(BuildContext context)
   {
     return Column(
+
       crossAxisAlignment: CrossAxisAlignment.start,
       children:
       [
@@ -88,8 +93,8 @@ class _CustomTextFieldState extends State<CustomTextField>
                 [
                   Text(
                     widget.label,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: widget.fontSize,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF1F2937),
                     ),
@@ -117,9 +122,9 @@ class _CustomTextFieldState extends State<CustomTextField>
           {
             return Text(
               widget.label,
-              style: const TextStyle
+              style: TextStyle
                 (
-                fontSize: 14,
+                fontSize: widget.fontSize,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF1F2937),
               ),
@@ -131,6 +136,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         const SizedBox(height: 8),
         Container(
           height: widget.height,
+          width: widget.width,
 
           child: TextFormField(
           controller: widget.controller,

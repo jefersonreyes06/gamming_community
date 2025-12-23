@@ -12,7 +12,20 @@
           "package_name": "com.wariull.game_community"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1000195925520-cb7u0lt8bgtub9ibaa74en8a6r23ut3o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wariull.game_community",
+            "certificate_hash": "19a1bd490e7238f025f3b238fd9089f51f280ffb"
+          }
+        },
+        {
+          "client_id": "1000195925520-i7tabc9vhcanbnfj11qoujabkoso8p3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCEdD541-SuhnLz8K2uC01sSSc-5qN47nU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000195925520-i7tabc9vhcanbnfj11qoujabkoso8p3g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
