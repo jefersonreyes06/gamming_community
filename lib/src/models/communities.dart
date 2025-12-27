@@ -4,42 +4,53 @@ class Communities
 {
   final String id;
   final String name;
-  final List<String> members;
   final String cover;
   final String description;
-  final Map<String, dynamic> messages;
+  final String userMessage;
+  final String lastMessage;
+  final int membersCount;
+  final int onlineCount;
+  final bool belong;
 
   Communities({
     required this.id,
     required this.name,
-    required this.members,
     this.cover = "",
     required this.description,
-    required this.messages,
+    this.userMessage = '',
+    this.lastMessage = "",
+    this.membersCount = 0,
+    this.onlineCount = 0,
+    this.belong = false,
   });
 
   factory Communities.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Communities(
       id: doc.id,
-      name: data['name'] as String? ?? '',
-      members: List<String>.from(data['members'] as List? ?? []),
-      cover: data['cover'] as String? ?? '',
-      description: data['description'] as String? ?? '',
-      messages: Map<String, dynamic>.from(data['messages'] as Map? ?? {}),
+      name: data['name'],
+      cover: data['cover'] ?? "",
+      description: data['description'] ?? "",
+      userMessage: data['userMessage'] ?? "",
+      lastMessage: data['lastMessage'] ?? "",
+      membersCount: data['membersCount'] ?? 0,
+      onlineCount: data['onlineCount'] ?? 0,
+      belong: data['belong'] ?? false,
     );
   }
 
   Map<String, dynamic> toJson()
   {
-    return
-      {
-        'name': name,
-        'members': members,
-        'cover': cover,
-        'description': description,
-        'messages': messages,
-      };
+    return {
+      'name': name,
+      'cover': cover,
+      'description': description,
+      'lastMessage': lastMessage,
+      'userMessage': userMessage,
+      'membersCount': membersCount,
+      'onlineCount': onlineCount,
+      'belong': belong
+    };
   }
 }
 

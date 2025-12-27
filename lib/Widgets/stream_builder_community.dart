@@ -31,9 +31,6 @@ class StreamBuilderCommunity extends StatelessWidget
 
           return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 6),
-              //padding: EdgeInsets.all(12),
-              //shrinkWrap: true,
-              //clipBehavior: Clip.none,
 
               itemCount: messages.length,
               
@@ -43,7 +40,7 @@ class StreamBuilderCommunity extends StatelessWidget
                     decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.all(Radius.circular(20))),
                     alignment: Alignment.center,
                     child: GestureDetector(
-                        onLongPress: () {print("Presionaste mucho tiempo");},
+                        onLongPress: () { print("Presionaste mucho tiempo"); },
                         
                         child: Lista(
                             title: messages[i].usuarioNombre,

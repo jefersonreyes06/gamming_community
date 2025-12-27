@@ -3,10 +3,13 @@ import 'package:game_community/Widgets/app_bar.dart';
 import 'package:game_community/Widgets/custom_search.dart';
 import 'package:game_community/Widgets/custom_feet.dart';
 import 'package:game_community/Widgets/stream_builder.dart';
+import 'package:game_community/Provider/communities_provider.dart';
 
 class SearchPage extends StatelessWidget
 {
+  CommunitiesProvider communitiesProvider = CommunitiesProvider();
 
+  @override
   Widget build(BuildContext context)
   {
     return Scaffold(

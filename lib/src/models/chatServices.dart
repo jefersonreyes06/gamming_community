@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:game_community/src/models/communities.dart';
 
 class ChatService
@@ -26,6 +27,12 @@ class ChatService
           .doc(comunidadId)
           .collection('messages')
           .add(mensaje.toMap());
+
+      await _firestore
+      .collection('communities')
+      .doc(comunidadId)
+      .update({'userMessage': usuarioNombre, 'lastMessage': texto});
+
     } catch (e) {
       print('Error enviando mensaje: $e');
       rethrow;
@@ -87,16 +94,41 @@ class ChatService
   }
 
   // Unirse a una comunidad
-  Future<void> unirseAComunidad({
-    required String comunidadId,
-    required String usuarioId,
+  Future<void> joinCommunity({
+    required Communities community,
+    required String userId,
+    required BuildContext context
   }) async {
-    await _firestore
-        .collection('communities')
-        .doc(comunidadId)
-        .update({
-          'members': FieldValue.arrayUnion([usuarioId])
-    });
+    // If user is not a member in the community, then join
+    final querySnapshot = await _firestore.collection('communities').doc(community.id).collection('members')
+        .where('userId', isEqualTo: userId).get();
+
+    if (querySnapshot.docs.isEmpty)
+    {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('communities')
+          .doc(community.id)
+          .set({'communityId': community.id, 'name': community.name, 'joinedAt': FieldValue.serverTimestamp()});
+
+      await _firestore
+          .collection('communities')
+          .doc(community.id)
+          .collection('members')
+          .doc(userId)
+          .set({'userId': userId, 'joinedAt': FieldValue.serverTimestamp()});
+    }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("You are already in this community"),
+          backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+        )
+      );
+    }
+
   }
 
   // Salir de una comunidad

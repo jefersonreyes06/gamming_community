@@ -1,0 +1,117 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:game_community/View/community_page.dart';
+import 'package:game_community/Provider/communities_provider.dart';
+import 'package:game_community/src/models/communities.dart';
+
+//import '../src/models/chatServices.dart';
+
+class StreamBuilderJoined extends StatefulWidget
+{
+  const StreamBuilderJoined({super.key});
+
+  @override
+  State<StreamBuilderJoined> createState() => StreamBuilderState();
+}
+
+class StreamBuilderState extends State<StreamBuilderJoined>
+{
+  final communitiesProvider = CommunitiesProvider();
+  final FirebaseAuth user = FirebaseAuth.instance;
+
+  @override
+  Widget build(BuildContext context)
+  {
+    return StreamBuilder< List<String> >(
+        stream: communitiesProvider.getAllJoinedCommunitiesStream(user.currentUser!.uid),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          final List<String> communitiesIds = snapshot.data!;
+
+          if (communitiesIds.isEmpty) {
+            return Center(child: Text("Don`t have a community? Search one right now"));
+          }
+
+          return StreamBuilder(
+              stream: communitiesProvider.getCommunitiesById(communitiesIds),
+              builder: (context, communitiesSnapshot) {
+                if (communitiesSnapshot.hasError) {
+                  return Center(child: Text('Error: ${communitiesSnapshot.error}'));
+                }
+                if (communitiesSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final communities = communitiesSnapshot.data ?? [];
+
+                return ListView.builder(
+                    itemCount: communitiesSnapshot.data!.length,
+                    itemBuilder: (context, i) {
+                      final community = communities[i];
+
+                      return Container(
+                          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 5),
+                          child: GestureDetector(
+
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CommunityPage(communityId: community.id, communityData: community.toJson()),
+                                  ),
+                                );
+                              },
+
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 13),
+                                height: 36,
+                                decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(20)),
+
+                                child: Row(
+                                  spacing: 10,
+                                  children: [
+                                    CircleAvatar(radius: 15, child: community.cover == "" ? Icon(Icons.videogame_asset_rounded) : Image.asset(community.cover)),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          spacing: 40,
+
+                                          children: [
+                                            Text(community.name, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),),
+                                            Row(
+                                                children: [
+                                                  Icon(Icons.circle, size: 6.5, color: Colors.green,),
+                                                  Text("Online: 2", style: TextStyle(fontSize: 9, color: Colors.black))
+                                                ]
+                                            )
+                                          ],
+                                        ),
+                                              Text(
+                                                  "${community.userMessage}:${community.lastMessage}" ?? "No messages",
+                                                  style: TextStyle(fontSize: 7.9, color: Colors.black)
+                                              ),
+                                      ]
+                                    ),
+                                  ]
+                                )
+                              )
+                          )
+                      );
+                    }
+                );
+              }
+          );
+        }
+    );
+  }
+}

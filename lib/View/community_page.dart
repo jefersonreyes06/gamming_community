@@ -51,6 +51,7 @@ class CommunityPageState extends State<CommunityPage> {
                         usuarioId: FirebaseAuth.instance.currentUser!.uid,
                         usuarioNombre: "${FirebaseAuth.instance.currentUser!.displayName}"
                       );
+                      messageController.clear();
                   }
                   else
                   {
