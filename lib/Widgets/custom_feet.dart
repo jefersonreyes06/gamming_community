@@ -17,7 +17,9 @@ class CustomFeetState extends State<CustomFeet>
   Widget build(BuildContext context)
   {
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF1A1A1D),
+      selectedItemColor: Colors.purpleAccent,
+      unselectedItemColor: Colors.grey,
       currentIndex: _currentIndex,
       onTap: (index) {
         setState(() {
@@ -35,7 +37,7 @@ class CustomFeetState extends State<CustomFeet>
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: "Inicio",
+          label: "Home",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.groups),
@@ -43,7 +45,7 @@ class CustomFeetState extends State<CustomFeet>
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          label: "Perfil",
+          label: "Profile",
         ),
       ],
     );

@@ -23,60 +23,71 @@ class CommunityPageState extends State<CommunityPage> {
   final ChatService _chatService = ChatService();
   TextEditingController messageController = TextEditingController();
 
-
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: Encabezado(
         backgroundColor: Colors.black87,
         title: "${widget.communityData['name']}",
         actions: [IconButton(
             onPressed: () {
-              _chatService.leaveCommunity(communityId: widget.communityId, userId: FirebaseAuth.instance.currentUser!.uid);
+              _chatService.leaveCommunity(communityId: widget.communityId,
+                  userId: FirebaseAuth.instance.currentUser!.uid);
               context.pop();
             },
             icon: Icon(Icons.exit_to_app_rounded))
         ],
       ),
+
       body: StreamBuilderCommunity(communityId: widget.communityId),
+
+
       bottomNavigationBar: Container(
-        transformAlignment: Alignment.center,
-        alignment: Alignment.center,
-        height: 80,
-        width: 150,
-        decoration: BoxDecoration(color: Colors.grey,),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          transformAlignment: Alignment.center,
+          alignment: Alignment.center,
+          height: 80,
+          width: 150,
+          decoration: BoxDecoration(color: Colors.grey,),
 
-        child: Row(
-          children: [
-            CustomTextField(label: "Write a message", height: 40, width: 300, hint: "Write something...", controller: messageController,),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
 
-            IconButton(
-                onPressed: ()
-                {
-                  if (FirebaseAuth.instance.currentUser?.displayName != null)
-                  {
-                      _chatService.sendMessage(
-                          comunidadId: widget.communityId,
-                        texto: messageController.text,
-                        usuarioId: FirebaseAuth.instance.currentUser!.uid,
-                        usuarioNombre: "${FirebaseAuth.instance.currentUser!.displayName}"
-                      );
-                      messageController.clear();
-                  }
-                  else
-                  {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("You must write a name user to send a message"),
-                        backgroundColor: const Color.fromARGB(255, 255, 0, 0),
-                      )
-                    );
-                  }
+              children: [
+                CustomTextField(
+                  label: "Write a message",
+                  height: 40,
+                  width: 300,
+                  hint: "Write something...",
+                  controller: messageController,),
 
-                },
-                icon: Icon(Icons.send))
-        ])
+                IconButton(
+                    onPressed: () {
+                      if (FirebaseAuth.instance.currentUser?.displayName !=
+                          null) {
+                        _chatService.sendMessage(
+                            comunidadId: widget.communityId,
+                            texto: messageController.text,
+                            usuarioId: FirebaseAuth.instance.currentUser!.uid,
+                            usuarioNombre: "${FirebaseAuth.instance.currentUser!
+                                .displayName}"
+                        );
+                        messageController.clear();
+                      }
+                      else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "You must write a name user to send a message"),
+                              backgroundColor: const Color.fromARGB(
+                                  255, 255, 0, 0),
+                            )
+                        );
+                      }
+                    },
+                    icon: Icon(Icons.send, size: 28,))
+              ])
       ),
     );
   }

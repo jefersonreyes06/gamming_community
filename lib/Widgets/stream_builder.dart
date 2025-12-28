@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:game_community/Widgets/custom_card.dart';
 import 'package:game_community/Provider/communities_provider.dart';
-import 'package:game_community/src/models/communities.dart';
 
 class Stream_Builder extends StatefulWidget
 {
@@ -20,8 +19,6 @@ class Stream_BuilderState extends State<Stream_Builder>
 
   final communitiesProvider = CommunitiesProvider();
   final FirebaseAuth user = FirebaseAuth.instance;
-  //final CustomCardState customCardState = CustomCardState();
-
 
   @override
   Widget build(BuildContext context)
@@ -51,56 +48,8 @@ class Stream_BuilderState extends State<Stream_Builder>
 
           }
         );
-
-        /*
-        return StreamBuilder< List<Communities> >(
-        stream: communitiesProvider.getAllCommunitiesStream(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          final List<Communities> communities = snapshot.data!;
-
-          if (communities.isEmpty) {
-            return Center(child: Text("Don`t have a community? Search one right now"));
-          }
-
-          return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, i) {
-                final community = communities[i];
-                final bool isMember = joinedCommunities.contains(community.id);
-
-
-
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.all(Radius.circular(16))),
-                  child: GestureDetector(
-                        onTap: () {},
-
-                        child: CustomCard(
-                          title: community.name,
-                          subtitle: '2',
-                          isMember: isMember,
-                          //isMember:  customCardState.updateIsMember(isMember);
-                          community: community,
-                          userId: user.currentUser!.uid,
-                        )
-                  )
-                );
-              }
-          );
-        });*/
       }
     );
-
-
   }
 
   void _checkMemberShip(String communityId, String userId) async {

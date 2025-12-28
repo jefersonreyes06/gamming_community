@@ -1,7 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:game_community/Provider/communities_provider.dart';
-import 'package:game_community/Widgets/app_bar.dart';
 import 'package:game_community/Widgets/custom_feet.dart';
 import 'package:game_community/Widgets/stream_builder_joined_communities.dart';
 import 'package:game_community/Widgets/community_card.dart';
@@ -18,7 +15,7 @@ class HomePage extends StatefulWidget
 
 class HomePageState extends State<HomePage> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
+  double _currentPage = 0;
 
   final communities = [
     'FPS',
@@ -53,15 +50,14 @@ class HomePageState extends State<HomePage> {
       ),
 
       drawer: Drawer(
-        width: 220,
+        width: 230,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
 
             children:
             [
-              //DrawerHeader(child: Text('Communities')),
-              SizedBox(height: 10,),
+              SizedBox(height: 20,),
               Container(
                   color: const Color(0xFF323237),
                   padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 10),
@@ -86,7 +82,6 @@ class HomePageState extends State<HomePage> {
                             decoration: InputDecoration(
                                 hintText: "Escribe algo...",
                                 border: OutlineInputBorder(),
-                                //alignLabelWithHint: true,
                                 suffixIcon: Icon(Icons.search)
                             ),
                           ),
@@ -94,9 +89,8 @@ class HomePageState extends State<HomePage> {
                       ]
                   )
               ),
-
-              Text("Communities", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-              SizedBox(height: 5,),
+              SizedBox(height: 15,),
+              Text("Communities", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
               Expanded(child: StreamBuilderJoined())
             ]
         ),
@@ -114,7 +108,7 @@ class HomePageState extends State<HomePage> {
                 controller: _pageController,
                 itemCount: communities.length,
                 onPageChanged: (index) {
-                  setState(() => _currentPage = index);//.toDouble());
+                  setState(() => _currentPage = index.toDouble());
                 },
                 itemBuilder: (context, index) {
                   return CommunityCard(
@@ -169,96 +163,7 @@ class HomePageState extends State<HomePage> {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF1A1A1D),
-        selectedItemColor: Colors.purpleAccent,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Post',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomFeet(),
     );
   }
-
-  /*
-  CommunitiesProvider communitiesProvider = CommunitiesProvider();
-  FirebaseAuth user = FirebaseAuth.instance;
-
-  @override
-  Widget build(BuildContext context)
-  {
-    return Scaffold(
-      //backgroundColor: Colors.white70,
-      appBar: Encabezado(backgroundColor: Colors.deepPurpleAccent, title: "Gaming Community",),
-      drawer: Drawer(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-
-              children:
-              [
-                //DrawerHeader(child: Text('Communities')),
-                SizedBox(height: 10,),
-                Container(
-                    color: Colors.white70,
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 10),
-
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-
-                        children: [
-                          Text("Groups"),
-                          SizedBox(width: 20),
-
-                          Container(
-                            height: 20,
-                            width: 100,
-
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              textAlignVertical: TextAlignVertical.center,
-
-                              decoration: InputDecoration(
-                                  hintText: "Escribe algo...",
-                                  border: OutlineInputBorder(),
-                                  //alignLabelWithHint: true,
-                                  suffixIcon: Icon(Icons.search)
-                              ),
-                            ),
-                          ),
-                        ]
-                    )
-                ),
-
-                Text("Communities", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                SizedBox(height: 5,),
-                Expanded(child: StreamBuilderJoined())
-              ]
-        ),
-        width: 220,
-      ),
-
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-
-        child: Center(
-          child: Text("Let's start to chat in communities where you along!", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(onPressed: () {}, child: Icon(Icons.add),),
-      bottomNavigationBar: CustomFeet()
-    );
-  }*/
 }

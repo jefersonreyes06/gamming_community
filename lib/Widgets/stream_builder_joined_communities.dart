@@ -64,9 +64,7 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                       final community = communities![i];
 
                       return Container(
-
-                          padding: EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 5),
+                          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                           child: GestureDetector(
 
                               onTap: () {
@@ -81,8 +79,8 @@ class StreamBuilderState extends State<StreamBuilderJoined>
 
                               child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      vertical: 0, horizontal: 13),
-                                  height: 36,
+                                      vertical: 2, horizontal: 13),
+                                  height: 45,
                                   decoration: BoxDecoration(color: const Color(
                                       0xFF323237), borderRadius: BorderRadius
                                       .circular(20)),
@@ -113,7 +111,7 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                                 children: [
                                                   Text(community.name,
                                                     style: TextStyle(
-                                                        fontSize: 10,
+                                                        fontSize: 12,
                                                         fontWeight: FontWeight
                                                             .bold,
                                                         color: Colors
@@ -123,12 +121,12 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                                         Icon(Icons.circle,
                                                           size: 6.5,
                                                           color: Colors
-                                                              .white70,),
+                                                              .green,),
                                                         Text("Online: 2",
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 color: Colors
-                                                                    .white70))
+                                                                    .green))
                                                       ]
                                                   )
                                                 ],
@@ -138,7 +136,7 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                                     .userMessage}:${community
                                                     .lastMessage}" ??
                                                     "No messages",
-                                                style: TextStyle(fontSize: 9,
+                                                style: TextStyle(fontSize: 11,
                                                     color: Colors.white70),
                                                 softWrap: false,
                                                 overflow: TextOverflow.ellipsis,
