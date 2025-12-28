@@ -7,6 +7,7 @@ import 'package:game_community/Widgets/custom_text_field.dart';
 import 'package:game_community/Widgets/stream_builder_community.dart';
 import 'package:game_community/Widgets/list_view.dart';
 import 'package:game_community/src/models/chatServices.dart';
+import 'package:go_router/go_router.dart';
 
 class CommunityPage extends StatefulWidget
 {
@@ -27,7 +28,17 @@ class CommunityPageState extends State<CommunityPage> {
   Widget build(BuildContext context)
   {
     return Scaffold(
-      appBar: Encabezado(backgroundColor: Colors.black87, title: "${widget.communityData['name']}", actions: [IconButton(onPressed: (){}, icon: Icon(Icons.search))],),
+      appBar: Encabezado(
+        backgroundColor: Colors.black87,
+        title: "${widget.communityData['name']}",
+        actions: [IconButton(
+            onPressed: () {
+              _chatService.leaveCommunity(communityId: widget.communityId, userId: FirebaseAuth.instance.currentUser!.uid);
+              context.pop();
+            },
+            icon: Icon(Icons.exit_to_app_rounded))
+        ],
+      ),
       body: StreamBuilderCommunity(communityId: widget.communityId),
       bottomNavigationBar: Container(
         transformAlignment: Alignment.center,
@@ -38,7 +49,7 @@ class CommunityPageState extends State<CommunityPage> {
 
         child: Row(
           children: [
-            CustomTextField(label: "Write a message", height: 40, width: 300, suffixIcon: Icons.send, hint: "Write something...", controller: messageController,),
+            CustomTextField(label: "Write a message", height: 40, width: 300, hint: "Write something...", controller: messageController,),
 
             IconButton(
                 onPressed: ()

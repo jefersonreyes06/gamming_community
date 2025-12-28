@@ -20,7 +20,7 @@ class SearchPage extends StatelessWidget
         child: Column(
           children: [
             CustomSearch(),
-            Stream_Builder()
+            Expanded(child: Stream_Builder())
           ],
         ),
 

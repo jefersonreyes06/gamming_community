@@ -56,14 +56,14 @@ class Communities
 
 class Message
 {
-  final String id;
+  //final String id;
   final String texto;
   final String usuarioId;
   final String usuarioNombre;
   final DateTime createdAt;
 
   Message({
-    required this.id,
+    //required this.id,
     required this.texto,
     required this.usuarioId,
     required this.usuarioNombre,
@@ -73,7 +73,7 @@ class Message
   factory Message.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Message(
-      id: doc.id,
+      //id: doc.id,
       texto: data['message'] ?? '',
       usuarioId: data['userId'] ?? '',
       usuarioNombre: data['user'] ?? '',
