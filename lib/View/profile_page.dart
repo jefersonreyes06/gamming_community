@@ -71,18 +71,20 @@ class ProfilePage extends StatelessWidget {
                       child: CircularProgressIndicator(),
                     );
                   }
-              
+
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Padding(
                       padding: EdgeInsets.only(left: 16),
                       child: Text("No perteneces a ninguna comunidad"),
                     );
                   }
-              
+
                   final communityIds = snapshot.data!;
-              
+
                   return StreamBuilder(
-                    stream: communitiesProvider.getCommunitiesById(communityIds),
+                    stream: communitiesProvider.getCommunitiesById(
+                      communityIds,
+                    ),
                     builder: (context, communitiesSnapshot) {
                       return ListView.builder(
                         itemCount: communitiesSnapshot.data!.length,
@@ -105,10 +107,36 @@ class ProfilePage extends StatelessWidget {
             //Cerrar sesion
             ListTile(
               leading: const Icon(Icons.logout),
-              title: const Text("Cerrar sesion"),
-              onTap: () async {
-                await auth.signOut();
-                context.go('/login');
+              title: const Text("Cerrar sesión"),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Cerrar sesión"),
+                    content: const Text(
+                      "¿Estás seguro de que deseas cerrar sesión?",
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Cierra la alerta
+                        },
+                        child: const Text("No"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop(); // Cierra la alerta
+                          await auth.signOut();
+                          context.go('/login');
+                        },
+                        child: const Text(
+                          "Sí",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ],

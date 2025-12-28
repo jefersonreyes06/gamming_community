@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage>
                           style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1F2937))
+                              color: Color.fromARGB(255, 163, 192, 234))
                       ),
                       const SizedBox(height: 10),
                       const Text(
@@ -193,7 +193,7 @@ class _RegisterPageState extends State<RegisterPage>
                             child: Text(
                               'O',
                               style: TextStyle(
-                                color: Color(0xFF6B7280),
+                                color: Color.fromARGB(255, 232, 233, 234),
                                 fontSize: 12,
                               ),
                             ),
@@ -239,7 +239,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF1F2937),
+                                  color: Color.fromARGB(255, 231, 233, 236),
                                 ),
                               ),
                             ],

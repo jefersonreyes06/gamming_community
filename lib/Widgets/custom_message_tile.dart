@@ -54,7 +54,7 @@ class MessageTile extends StatelessWidget {
                         gradient: const LinearGradient(
                           colors: [
                             Color(0xFF7F00FF),
-                            Color(0xFFE100FF),
+                            Color.fromARGB(255, 230, 43, 22),
                           ],
                         ),
                       ),
