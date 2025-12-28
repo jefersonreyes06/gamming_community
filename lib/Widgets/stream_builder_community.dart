@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:game_community/Widgets/list_view.dart';
 import 'package:game_community/Provider/communities_provider.dart';
 import 'package:game_community/src/models/communities.dart';
 import 'package:game_community/src/models/chatServices.dart';
+
+import 'custom_message_tile.dart';
 
 class StreamBuilderCommunity extends StatelessWidget {
   final String communityId;
@@ -29,22 +31,12 @@ class StreamBuilderCommunity extends StatelessWidget {
           return ListView.builder(
               itemCount: messages.length,
               itemBuilder: (context, i) {
-                return Container(
-                  height: 75,
-                  width: 150,
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                    decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.all(Radius.circular(20))),
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                        onLongPress: () {
-                          print("Presionaste mucho tiempo");
-                        },
-
-                        child: Lista(
-                            title: messages[i].usuarioNombre,
-                            lastMessages: messages[i].texto,
-                        )
-                    )
+                return MessageTile(
+                  userName: messages[i].usuarioNombre,
+                  message: messages[i].texto,
+                  date: messages[i].createdAt.toString(),
+                  icon: Image.network(FirebaseAuth.instance.currentUser!.photoURL ?? ""),
+                  unread: true,
                 );
               }
           );

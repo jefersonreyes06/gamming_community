@@ -88,7 +88,7 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                   child: Row(
                                       spacing: 10,
                                       children: [
-                                        CircleAvatar(radius: 15,
+                                        CircleAvatar(radius: 18,
                                             child: community.cover == ""
                                                 ? Icon(
                                                 Icons.videogame_asset_rounded)

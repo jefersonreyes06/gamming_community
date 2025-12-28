@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
 
             //Nombre
             Text(
-              user.displayName ?? "Sin nombre",
+              user.displayName ?? "User",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
