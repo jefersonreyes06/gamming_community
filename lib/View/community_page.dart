@@ -70,13 +70,13 @@ class CommunityPageState extends State<CommunityPage> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop(false); // No salir
+                          Navigator.of(context).pop(false); 
                         },
                         child: Text('No'),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop(true); // Confirmar salida
+                          Navigator.of(context).pop(true); 
                         },
                         child: Text('Sí'),
                       ),
@@ -86,23 +86,19 @@ class CommunityPageState extends State<CommunityPage> {
               );
 
               if (shouldLeave == true) {
-                // Llamar al servicio para salir de la comunidad
                 await _chatService.leaveCommunity(
                   communityId: widget.communityId,
                   userId: FirebaseAuth.instance.currentUser!.uid,
                 );
-
-                // Cerrar la página actual usando GoRouter
-                context.pop(); // o GoRouter.of(context).pop();
+                context.pop(); 
               }
             },
-            icon: Icon(Icons.exit_to_app_rounded),
+            icon: Icon(Icons.exit_to_app_rounded,color: Colors.red),
           ),
         ],
       ),
 
       body: StreamBuilderCommunity(communityId: widget.communityId),
-
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
         transformAlignment: Alignment.center,
@@ -110,7 +106,6 @@ class CommunityPageState extends State<CommunityPage> {
         height: 80,
         width: 150,
         decoration: BoxDecoration(color: Color(0xFF1A1A1F)),
-
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

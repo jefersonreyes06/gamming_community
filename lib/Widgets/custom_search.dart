@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomSearch extends StatefulWidget
-{
+class CustomSearch extends StatefulWidget {
   final Color backgroundColor;
   final Color textColor;
   final double fontSize;
@@ -13,55 +12,76 @@ class CustomSearch extends StatefulWidget
 
   const CustomSearch({
     super.key,
-    required this.backgroundColor, this.textColor = Colors.white,
-    required this.title, required this.hintText, this.height = 35,
-    required this.trailingIcon, this.fontSize = 12, this.widthTextField = 150
+    required this.backgroundColor,
+    this.textColor = Colors.white,
+    required this.title,
+    required this.hintText,
+    this.height = 35,
+    required this.trailingIcon,
+    this.fontSize = 12,
+    this.widthTextField = 150,
   });
 
   @override
   State<CustomSearch> createState() => CustomSearchState();
 }
 
-class CustomSearchState extends State<CustomSearch>
-{
+class CustomSearchState extends State<CustomSearch> {
   @override
-  Widget build (BuildContext context)
-  {
+  Widget build(BuildContext context) {
+    final bool hasTitle = widget.title.trim().isNotEmpty;
+
     return Container(
       height: widget.height,
-        color: widget.backgroundColor,
+      color: widget.backgroundColor,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
 
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
 
-            children: [
-              Text(widget.title, style: TextStyle(fontSize: widget.fontSize, color: widget.textColor)),
-              SizedBox(width: 20),
+        children: [
+          // 🟢 TÍTULO SOLO SI EXISTE
+          if (hasTitle)
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Text(
+                widget.title,
+                style: TextStyle(
+                  fontSize: widget.fontSize,
+                  color: widget.textColor,
+                ),
+              ),
+            ),
 
-              Container(
-                height: widget.height-4,
-                width: widget.widthTextField,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+          Expanded(
+            flex: hasTitle ? 0 : 1,
+            child: Container(
+              height: widget.height - 4,
+              width: hasTitle ? widget.widthTextField : null,
 
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  cursorHeight: 13,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
 
-                  decoration: InputDecoration(
+              child: TextField(
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
+                cursorHeight: 13,
 
-                      hintText: widget.hintText,
-
-                      border: OutlineInputBorder(),
-                      alignLabelWithHint: true,
-                      suffixIcon: widget.trailingIcon,
-                      hintStyle: TextStyle(color: widget.textColor, fontSize: widget.fontSize-0.5)
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  border: const OutlineInputBorder(),
+                  suffixIcon: widget.trailingIcon,
+                  hintStyle: TextStyle(
+                    color: widget.textColor,
+                    fontSize: widget.fontSize - 0.5,
                   ),
                 ),
               ),
-            ]
-        )
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

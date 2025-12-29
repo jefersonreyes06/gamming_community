@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:game_community/Widgets/custom_icon.dart';
 import 'package:game_community/Provider/communities_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomCard extends StatefulWidget {
   final DocumentSnapshot communityDoc;
@@ -43,6 +44,24 @@ class CustomCardState extends State<CustomCard> {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () {
+          if (!widget.isMember) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Debes unirte a la comunidad para acceder al chat',
+                ),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            return;
+          }
+          final id = widget.communityDoc.id;
+          final data = widget.communityDoc.data() as Map<String, dynamic>;
+
+          context.push('/community/$id', extra: data);
+        },
+
         title: Text(widget.communityDoc['name']),
 
         // I believe there’s a more efficient approach to this fix that would reduce
