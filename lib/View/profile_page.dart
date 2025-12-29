@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            //Avatar
+            // Avatar
             CircleAvatar(
               radius: 45,
               backgroundImage: user.photoURL != null
@@ -39,26 +39,26 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            //Nombre
+            // Nombre
             Text(
               user.displayName ?? "User",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
-            //Email
+            // Email
             Text(
               user.email ?? "Sin email",
               style: const TextStyle(color: Colors.grey),
             ),
 
-            const Divider(height: 40),
+            const Divider(height: 20),
 
-            //Opciones
-            ListTile(
-              leading: const Icon(Icons.groups),
-              title: const Text("Mis comunidades"),
+            const ListTile(
+              leading: Icon(Icons.groups),
+              title: Text("Mis comunidades"),
             ),
 
+            //Mis Comunidades
             Expanded(
               child: StreamBuilder<List<String>>(
                 stream: communitiesProvider.getAllJoinedCommunitiesStream(
@@ -66,10 +66,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: CircularProgressIndicator(),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -86,14 +83,37 @@ class ProfilePage extends StatelessWidget {
                       communityIds,
                     ),
                     builder: (context, communitiesSnapshot) {
+                      if (!communitiesSnapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final communities = communitiesSnapshot.data!;
+
                       return ListView.builder(
-                        itemCount: communitiesSnapshot.data!.length,
+                        itemCount: communities.length,
                         itemBuilder: (context, i) {
-                          Communities community = communitiesSnapshot.data![i];
+                          final community = communities[i];
                           return ListTile(
                             contentPadding: const EdgeInsets.only(left: 40),
-                            leading: const Icon(Icons.circle, size: 8),
+                            leading: CircleAvatar(
+                              radius: 16,
+                              backgroundImage: community.cover.isNotEmpty
+                                  ? NetworkImage(community.cover)
+                                  : null,
+                              child: community.cover.isEmpty
+                                  ? const Icon(Icons.groups, size: 16)
+                                  : null,
+                            ),
                             title: Text("Comunidad de ${community.name}"),
+                            onTap: () {
+                              context.push(
+                                '/community/${community.id}',
+                                extra: {
+                                  'name': community.name,
+                                  'cover': community.cover,
+                                },
+                              );
+                            },
                           );
                         },
                       );
@@ -102,42 +122,41 @@ class ProfilePage extends StatelessWidget {
                 },
               ),
             ),
-
-            const Spacer(),
-            //Cerrar sesion
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("Cerrar sesión"),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("Cerrar sesión"),
-                    content: const Text(
-                      "¿Estás seguro de que deseas cerrar sesión?",
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Cierra la alerta
-                        },
-                        child: const Text("No"),
+            // Cerrar Sesion
+            SafeArea(
+              top: false,
+              child: ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text("Cerrar sesión"),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Cerrar sesión"),
+                      content: const Text(
+                        "¿Estás seguro de que deseas cerrar sesión?",
                       ),
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.of(context).pop(); // Cierra la alerta
-                          await auth.signOut();
-                          context.go('/login');
-                        },
-                        child: const Text(
-                          "Sí",
-                          style: TextStyle(color: Colors.red),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("No"),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            await auth.signOut();
+                            context.go('/login');
+                          },
+                          child: const Text(
+                            "Sí",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

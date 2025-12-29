@@ -11,29 +11,25 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'theme/dark_gamer_theme.dart';
 
-void main() async
-{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget
-{
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: darkGamerTheme,
       routerConfig: GoRouter(
-        redirect: (context, state){
+        redirect: (context, state) {
           final user = FirebaseAuth.instance.currentUser;
           final freeRoutes = ['register'];
 
-          if (user == null && !freeRoutes.contains(state.fullPath))
-          {
+          if (user == null && !freeRoutes.contains(state.fullPath)) {
             return '/login';
           }
 
@@ -41,34 +37,43 @@ class MyApp extends StatelessWidget
         },
         initialLocation: '/home',
         routes: [
-          GoRoute(path: '/login', name: 'login', builder: (context, state) => LoginPage()),
-          GoRoute(path: '/register', name: 'register', builder: (context, state) => RegisterPage()),
           GoRoute(
-              path: '/home',
-              name: 'home',
-              builder: (context, state) => HomePage(),
+            path: '/login',
+            name: 'login',
+            builder: (context, state) => LoginPage(),
           ),
-          GoRoute(path: '/search', name: 'search', builder: (context, state) => SearchPage()),
-          GoRoute(path: '/community:id', name: 'community',
-              builder: (context, state)
-              {
-                try {
-                  final communityId = state.pathParameters['id']!;
-                  final communityData = state.extra as Map<String, dynamic>? ?? {};
+          GoRoute(
+            path: '/register',
+            name: 'register',
+            builder: (context, state) => RegisterPage(),
+          ),
+          GoRoute(
+            path: '/home',
+            name: 'home',
+            builder: (context, state) => HomePage(),
+          ),
+          GoRoute(
+            path: '/search',
+            name: 'search',
+            builder: (context, state) => SearchPage(),
+          ),
+          GoRoute(
+            path: '/community/:id',
+            name: 'community',
+            builder: (context, state) {
+              final communityId = state.pathParameters['id']!;
+              final communityData = state.extra as Map<String, dynamic>? ?? {};
 
-                  return CommunityPage(communityId: communityId, communityData: communityData);
-                } catch (e) {
-                  return Scaffold();
-                }
-              }
+              return CommunityPage(
+                communityId: communityId,
+                communityData: communityData,
+              );
+            },
           ),
-          GoRoute(
-              path: '/profile',
-              builder: (context, state) => ProfilePage(),
-          )
-        ]
+          GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
+        ],
       ),
-      debugShowCheckedModeBanner: false
+      debugShowCheckedModeBanner: false,
     );
   }
 }
