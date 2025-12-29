@@ -4,6 +4,8 @@ import 'package:game_community/View/community_page.dart';
 import 'package:game_community/Provider/communities_provider.dart';
 import 'package:game_community/src/models/communities.dart';
 
+import 'custom_icon.dart';
+
 //import '../src/models/chatServices.dart';
 
 class StreamBuilderJoined extends StatefulWidget
@@ -88,15 +90,8 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                   child: Row(
                                       spacing: 10,
                                       children: [
-                                        CircleAvatar(radius: 18,
-                                            child: community.cover == ""
-                                                ? Icon(
-                                                Icons.videogame_asset_rounded)
-                                                : Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                    child: Image.network(community.cover, fit: BoxFit.cover,)))
-                                        ),
+                                        CustomIcon(cover: community.cover,
+                                            iconSize: 17.5, radius: 10),
                                         Expanded(
                                             child: Column(
                                             crossAxisAlignment: CrossAxisAlignment

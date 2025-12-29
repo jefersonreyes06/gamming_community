@@ -30,7 +30,6 @@ class CustomSearchState extends State<CustomSearch>
     return Container(
       height: widget.height,
         color: widget.backgroundColor,
-        padding: EdgeInsetsGeometry.symmetric(vertical: 8, horizontal: 10),
 
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -43,6 +42,7 @@ class CustomSearchState extends State<CustomSearch>
               Container(
                 height: widget.height-4,
                 width: widget.widthTextField,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
 
                 child: TextField(
                   textAlign: TextAlign.center,
@@ -52,6 +52,7 @@ class CustomSearchState extends State<CustomSearch>
                   decoration: InputDecoration(
 
                       hintText: widget.hintText,
+
                       border: OutlineInputBorder(),
                       alignLabelWithHint: true,
                       suffixIcon: widget.trailingIcon,

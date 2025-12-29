@@ -70,4 +70,16 @@ class CommunitiesProvider
           return snapshot.docs.first['message'];
         });
   }
+
+  Future <int?> getNumberOfMembers(String communityId) async
+  {
+    final querySnapshot = await FirebaseFirestore.instance
+    .collection('communities')
+    .doc(communityId)
+    .collection('members')
+    .count()
+    .get();
+
+    return querySnapshot.count;
+  }
 }

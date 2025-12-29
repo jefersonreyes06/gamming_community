@@ -6,7 +6,7 @@ import 'package:game_community/Provider/communities_provider.dart';
 
 class Stream_Builder extends StatefulWidget
 {
-  Stream_Builder({super.key});
+  const Stream_Builder({super.key});
 
   @override
   State<Stream_Builder> createState() => Stream_BuilderState();
@@ -27,8 +27,6 @@ class Stream_BuilderState extends State<Stream_Builder>
       stream: FirebaseFirestore.instance.collection('communities').snapshots(),
       builder: (context, communitySnapshot) {
         if (!communitySnapshot.hasData) { return Center(child: CircularProgressIndicator()); }
-
-        //final Set<String> joinedCommunities = joinedSnapshot.data!.toSet();
 
         final List<QueryDocumentSnapshot> communities = communitySnapshot.data!.docs;
 
@@ -69,7 +67,7 @@ class Stream_BuilderState extends State<Stream_Builder>
 
     void _toggleMemberShip(QueryDocumentSnapshot community, String userId) async {
       final currentStatus = _memberShipCache[community.id] ?? false;
-      print("Toggle eject $currentStatus");
+      //print("Toggle eject $currentStatus");
 
 
       setState(() {
@@ -120,6 +118,7 @@ class Stream_BuilderState extends State<Stream_Builder>
         setState(() {
           _memberShipCache[community.id] = currentStatus;
         });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error: $e"),)
         );

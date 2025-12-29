@@ -5,6 +5,7 @@ import 'package:game_community/Widgets/stream_builder_joined_communities.dart';
 import 'package:game_community/Widgets/community_card.dart';
 import 'package:game_community/Widgets/post_card.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:game_community/Widgets/text_field.dart';
 
 class HomePage extends StatefulWidget
 {
@@ -54,18 +55,23 @@ class HomePageState extends State<HomePage> {
         width: 230,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
 
             children:
             [
               SizedBox(height: 35,),
               Text("Communities", style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),),
+              SizedBox(height: 10,),
+              CustomTextField(hintText: "Search a community", trailingIcon: Icon(Icons.search),
+                  fontSize: 15, height: 25, yPadding: 0, xPadding: 17, borderRadius: 50,),
+
+              /*
               CustomSearch(
-                  backgroundColor: Color.fromARGB(200, 34, 33, 33), title: "Search",
+                  backgroundColor: Color.fromARGB(200, 34, 33, 33), title: "",
                   hintText: "Community", trailingIcon: Icon(Icons.search),
                   height: 36, fontSize: 15.5, textColor: Colors.white,
-                widthTextField: 140
-              ),
+                widthTextField: 180
+              ),*/
               Divider(),
               Expanded(child: StreamBuilderJoined())
             ]
