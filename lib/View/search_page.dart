@@ -19,7 +19,14 @@ class SearchPage extends StatelessWidget
         decoration: BoxDecoration(color: Colors.black87),
         child: Column(
           children: [
-            CustomSearch(),
+            Divider(),
+            CustomSearch(
+              height: 42, fontSize: 18,
+              textColor: Colors.white,  backgroundColor: Colors.black12,
+              title: "Communities",
+              hintText: "Search", trailingIcon: Icon(Icons.search)
+            ),
+            Divider(),
             Expanded(child: Stream_Builder())
           ],
         ),

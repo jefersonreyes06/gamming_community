@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_community/Widgets/custom_feet.dart';
+import 'package:game_community/Widgets/custom_search.dart';
 import 'package:game_community/Widgets/stream_builder_joined_communities.dart';
 import 'package:game_community/Widgets/community_card.dart';
 import 'package:game_community/Widgets/post_card.dart';
@@ -57,40 +58,15 @@ class HomePageState extends State<HomePage> {
 
             children:
             [
-              SizedBox(height: 20,),
-              Container(
-                  color: const Color(0xFF323237),
-                  padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 10),
-
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-
-                      children: [
-                        Text("Groups"),
-                        SizedBox(width: 20),
-
-                        Container(
-                          height: 20,
-                          width: 100,
-                          color: const Color(0xFF323237),
-
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.center,
-
-                            decoration: InputDecoration(
-                                hintText: "Escribe algo...",
-                                border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.search)
-                            ),
-                          ),
-                        ),
-                      ]
-                  )
+              SizedBox(height: 35,),
+              Text("Communities", style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),),
+              CustomSearch(
+                  backgroundColor: Color.fromARGB(200, 34, 33, 33), title: "Search",
+                  hintText: "Community", trailingIcon: Icon(Icons.search),
+                  height: 36, fontSize: 15.5, textColor: Colors.white,
+                widthTextField: 140
               ),
-              SizedBox(height: 15,),
-              Text("Communities", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+              Divider(),
               Expanded(child: StreamBuilderJoined())
             ]
         ),

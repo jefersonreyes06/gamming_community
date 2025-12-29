@@ -92,7 +92,11 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                             child: community.cover == ""
                                                 ? Icon(
                                                 Icons.videogame_asset_rounded)
-                                                : Image.asset(community.cover)),
+                                                : Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                    child: Image.network(community.cover, fit: BoxFit.cover,)))
+                                        ),
                                         Expanded(
                                             child: Column(
                                             crossAxisAlignment: CrossAxisAlignment
@@ -103,10 +107,9 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                             children: [
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment
-                                                    .spaceEvenly,
+                                                    .spaceBetween,
                                                 crossAxisAlignment: CrossAxisAlignment
                                                     .start,
-                                                spacing: 40,
 
                                                 children: [
                                                   Text(community.name,
@@ -117,6 +120,11 @@ class StreamBuilderState extends State<StreamBuilderJoined>
                                                         color: Colors
                                                             .white70),),
                                                   Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .end,
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+
                                                       children: [
                                                         Icon(Icons.circle,
                                                           size: 6.5,
