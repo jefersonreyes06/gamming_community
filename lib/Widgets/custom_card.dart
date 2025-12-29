@@ -30,13 +30,14 @@ class CustomCardState extends State<CustomCard> {
   }
 
   void updateCount() async {
-    int? count = await communitiesProvider.getNumberOfMembers(widget.communityDoc.id);
+    int? count = await communitiesProvider.getNumberOfMembers(
+      widget.communityDoc.id,
+    );
 
     setState(() {
       memberCount = count;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,17 +49,21 @@ class CustomCardState extends State<CustomCard> {
         // costs and follow better coding practices.
         subtitle: Text("Members: ${memberCount}"),
         leading: CustomIcon(
-            cover: widget.communityDoc['cover'], iconSize: 22, radius: 13),
+          cover: widget.communityDoc['cover'],
+          iconSize: 22,
+          radius: 13,
+        ),
         trailing: TextButton(
           onPressed: widget.onToggleMemberShip,
 
-          style: ButtonStyle(backgroundColor: WidgetStateProperty.all(
-              widget.isMember ? Colors.red : Colors.green),
-              foregroundColor: WidgetStateProperty.all(Colors.white)
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(
+              widget.isMember ? Colors.green : Colors.red,
+            ),
+            foregroundColor: WidgetStateProperty.all(Colors.white),
           ),
           child: Text(widget.isMember ? "Leave" : "Join"),
         ),
-
       ),
     );
   }
