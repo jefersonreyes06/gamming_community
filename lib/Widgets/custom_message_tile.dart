@@ -43,11 +43,10 @@ class MessageTile extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// AVATAR (solo para otros)
                 if (!isMe) ...[
                   CircleAvatar(
-                    radius: 18,
-                    backgroundColor: const Color(0xFFB11226),
+                    radius: 22,
+                    backgroundColor: const Color(0xFF1A1A1F),
                     child: icon,
                   ),
                   const SizedBox(width: 10),

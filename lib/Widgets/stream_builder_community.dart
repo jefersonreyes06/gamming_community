@@ -28,14 +28,18 @@ class StreamBuilderCommunity extends StatelessWidget {
           }
           List<Message> messages = snapshot.data ?? {};
 
+
+
           return ListView.builder(
               itemCount: messages.length,
               itemBuilder: (context, i) {
+                final String path = "letter-${messages[i].usuarioNombre.characters.first}.png";
+
                 return MessageTile(
                   userName: messages[i].usuarioNombre,
                   message: messages[i].texto,
                   date: messages[i].createdAt.toString(),
-                  icon: Image.network(FirebaseAuth.instance.currentUser!.photoURL ?? ""),
+                  icon: Image.asset("assets/$path", width: 60, height: 60),
                   unread: true,
                 );
               }

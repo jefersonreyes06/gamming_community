@@ -31,3 +31,6 @@ flutter:
 
   assets:
     - assets/google.png
+    - assets/letter-J.png
+    - assets/letter-M.png
+    - assets/letter-V.png

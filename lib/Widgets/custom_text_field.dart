@@ -95,13 +95,13 @@ class _CustomTextFieldState extends State<CustomTextField>
                     widget.label,
                     style: TextStyle(
                       fontSize: widget.fontSize,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1F2937),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                   InkWell
                   (
-                    onTap: () => print("Hola"),
+                    onTap: () {},
 
                     splashFactory: InkRipple.splashFactory,
                     borderRadius: BorderRadius.circular(20),
@@ -125,8 +125,8 @@ class _CustomTextFieldState extends State<CustomTextField>
               style: TextStyle
                 (
                 fontSize: widget.fontSize,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             );
           }
@@ -134,7 +134,7 @@ class _CustomTextFieldState extends State<CustomTextField>
 
 
         const SizedBox(height: 8),
-        Container(
+        SizedBox(
           height: widget.height,
           width: widget.width,
 

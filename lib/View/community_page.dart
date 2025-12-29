@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:game_community/Widgets/app_bar.dart';
-import 'package:game_community/Widgets/custom_feet.dart';
-import 'package:game_community/Widgets/custom_search.dart';
+import 'package:game_community/Widgets/custom_icon.dart';
 import 'package:game_community/Widgets/custom_text_field.dart';
 import 'package:game_community/Widgets/stream_builder_community.dart';
-import 'package:game_community/Widgets/list_view.dart';
 import 'package:game_community/src/models/chatServices.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,17 +24,40 @@ class CommunityPageState extends State<CommunityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Encabezado(
-        backgroundColor: Colors.black87,
-        title: "${widget.communityData['name']}",
-        actions: [IconButton(
+      appBar: AppBar(
+        leadingWidth: 39,
+        titleSpacing: 0,
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_ios),
+          padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+          visualDensity: VisualDensity.compact,
+          constraints: const BoxConstraints(),
+        ),
+        backgroundColor: Color(0xFF1A1A1F),
+        title:  Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 0,
+          children: [
+            CustomIcon(cover: widget.communityData['cover'], iconSize: 18, radius: 20),
+            SizedBox(width: 15),
+            Text("${widget.communityData['name']}"),
+          ]),
+
+        actions: [
+          IconButton(
             onPressed: () {
               _chatService.leaveCommunity(communityId: widget.communityId,
                   userId: FirebaseAuth.instance.currentUser!.uid);
               context.pop();
             },
-            icon: Icon(Icons.exit_to_app_rounded))
-        ],
+            icon: Icon(Icons.exit_to_app_rounded)
+          ),
+
+        ]
       ),
 
       body: StreamBuilderCommunity(communityId: widget.communityId),
@@ -48,19 +69,22 @@ class CommunityPageState extends State<CommunityPage> {
           alignment: Alignment.center,
           height: 80,
           width: 150,
-          decoration: BoxDecoration(color: Colors.grey,),
+          decoration: BoxDecoration(color: Color(0xFF1A1A1F),),
 
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
 
               children: [
+                Divider(),
                 CustomTextField(
                   label: "Write a message",
-                  height: 40,
-                  width: 300,
+                  height: 28,
+                  width: 280,
                   hint: "Write something...",
-                  controller: messageController,),
+                  controller: messageController,
+                  borderRadius: 20,
+                ),
 
                 IconButton(
                     onPressed: () {
