@@ -16,119 +16,90 @@ class MessageTile extends StatelessWidget {
     required this.icon,
     this.unread = false,
   });
-
   @override
   Widget build(BuildContext context) {
+    final bool isMe =
+        userName == FirebaseAuth.instance.currentUser!.displayName;
+
     return Row(
-        mainAxisAlignment: userName ==
-            FirebaseAuth.instance.currentUser!.displayName
-            ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.65,
+      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isMe ? const Color(0xFF1A1A1F) : const Color(0xFF121216),
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(14),
+                topRight: const Radius.circular(14),
+                bottomLeft: isMe ? const Radius.circular(14) : Radius.zero,
+                bottomRight: isMe ? Radius.zero : const Radius.circular(14),
               ),
-              child: Container(
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// AVATAR (solo para otros)
+                if (!isMe) ...[
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: const Color(0xFFB11226),
+                    child: icon,
+                  ),
+                  const SizedBox(width: 10),
+                ],
 
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1D),
-                  borderRadius: BorderRadius.circular(14),
-                  border: unread
-                      ? Border.all(color: Colors.purpleAccent.withOpacity(0.6))
-                      : null,
-                ),
-                child: Row(
-                  children: [
-
-                    /// 👤 AVATAR
-                    Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF7F00FF),
-                            Color.fromARGB(255, 230, 43, 22),
-                          ],
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        child: icon,
-                        //color: Colors.white,
-                        radius: 22,
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    /// 💬 MESSAGE CONTENT
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                /// CONTENIDO
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Username + fecha
+                      Row(
                         children: [
-
-                          /// Username + Date
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  userName,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                          Expanded(
+                            child: Text(
+                              userName,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
                               ),
-                              const SizedBox(width: 6),
-                              Text(
-                                date,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white54,
-                                ),
-                              ),
-                            ],
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-
-                          const SizedBox(height: 4),
-
-                          /// Message preview
                           Text(
-                            message,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            date,
                             style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.white70,
+                              fontSize: 10,
+                              color: Colors.white38,
                             ),
                           ),
                         ],
                       ),
-                    ),
 
-                    /// 🔔 UNREAD DOT
-                    if (unread) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.purpleAccent,
-                          shape: BoxShape.circle,
+                      const SizedBox(height: 6),
+
+                      /// MENSAJE
+                      Text(
+                        message,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFFDDDDDD),
                         ),
                       ),
                     ],
-                  ],
-                ),))
-        ]
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
