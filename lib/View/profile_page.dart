@@ -40,9 +40,24 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Nombre
-            Text(
-              user.displayName ?? "User",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  user.displayName ?? "User",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                IconButton(
+                  icon: const Icon(Icons.edit, size: 18),
+                  onPressed: () {
+                    context.push('/edit-profile');
+                  },
+                ),
+              ],
             ),
 
             // Email

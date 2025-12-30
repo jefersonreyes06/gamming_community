@@ -40,7 +40,6 @@ class CustomSearchState extends State<CustomSearch> {
         crossAxisAlignment: CrossAxisAlignment.center,
 
         children: [
-          // 🟢 TÍTULO SOLO SI EXISTE
           if (hasTitle)
             Padding(
               padding: const EdgeInsets.only(right: 16),

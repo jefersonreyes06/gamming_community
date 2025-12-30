@@ -10,6 +10,7 @@ import 'View/profile_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'theme/dark_gamer_theme.dart';
+import 'Widgets/EditProfilePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +72,10 @@ class MyApp extends StatelessWidget {
             },
           ),
           GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
+          GoRoute(
+            path: '/edit-profile',
+            builder: (context, state) => const EditProfilePage(),
+          ),
         ],
       ),
       debugShowCheckedModeBanner: false,
