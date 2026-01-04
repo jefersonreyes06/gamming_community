@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 
 class Auth
 {
-  //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  //final FirebaseAuth user = FirebaseAuth.instance;
-
   Future<void> registerUser(String email, String password, BuildContext context) async
   {
     try
@@ -26,12 +23,12 @@ class Auth
     }
   }
 
-  Future<void> SignInWithEmailAndPassword(String email, String password, BuildContext context) async
+  Future<void> signInWithEmailAndPassword(String email, String password, BuildContext context) async
   {
     final FirebaseAuth auth = FirebaseAuth.instance;
     try
     {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
       context.go('/home');
     }
     catch (e)
@@ -62,7 +59,7 @@ class Auth
     }
   }
 
-  Future<void> SignInWithGoogle(BuildContext context) async
+  Future<void> signInWithGoogle(BuildContext context) async
   {
     final FirebaseAuth user = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn.instance;
@@ -106,7 +103,7 @@ class Auth
 
           const SnackBar(
             content: Text("Account created successfully!"),
-            backgroundColor: const Color.fromARGB(255, 92, 200, 214),
+            backgroundColor: Color.fromARGB(255, 92, 200, 214),
           ),
         );
       }
@@ -125,7 +122,7 @@ class Auth
 
           const SnackBar(
             content: Text("Account created successfully!"),
-            backgroundColor: const Color.fromARGB(255, 92, 200, 214),
+            backgroundColor: Color.fromARGB(255, 92, 200, 214),
           ),
         );
       }
@@ -142,14 +139,14 @@ class Auth
     context.go('/home');
   }
 
-  Future<void> SendMessage(String message) async
+  Future<void> sendMessage(String message) async
   {
     try
     {
       final user = FirebaseAuth.instance.currentUser;
       final messages = FirebaseFirestore.instance;
 
-      Map<String, dynamic> data = {"${user!.uid}":
+      Map<String, dynamic> data = {user!.uid:
         {
           'name': user.displayName,
           'message': message,
@@ -157,7 +154,7 @@ class Auth
         }
       };
 
-      final doc = messages.collection('messages').doc().set(data);
+      await messages.collection('messages').doc().set(data);
     }
     catch (e)
     {

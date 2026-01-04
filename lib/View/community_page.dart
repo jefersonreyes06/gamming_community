@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:game_community/Widgets/app_bar.dart';
+import 'package:game_community/Provider/storage/storage_repository.dart';
 import 'package:game_community/Widgets/custom_icon.dart';
 import 'package:game_community/Widgets/custom_text_field.dart';
 import 'package:game_community/Widgets/stream_builder_community.dart';
@@ -17,11 +18,13 @@ class CommunityPage extends StatefulWidget {
     required this.communityData,
   });
 
+  @override
   State<CommunityPage> createState() => CommunityPageState();
 }
 
 class CommunityPageState extends State<CommunityPage> {
   final ChatService _chatService = ChatService();
+  //final StorageRepository _storageRepository = StorageRepository(FirebaseStorage.instance);
   TextEditingController messageController = TextEditingController();
 
   @override
@@ -58,14 +61,14 @@ class CommunityPageState extends State<CommunityPage> {
         actions: [
           IconButton(
             onPressed: () async {
-              // Mostrando alerta de confirmación
+              // Showing a notification alert
               bool shouldLeave = await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Salir de la comunidad'),
+                    title: Text('Leave Community?'),
                     content: Text(
-                      '¿Estás seguro de que quieres salir de la comunidad?',
+                      'Are you sure you want to leave this community?',
                     ),
                     actions: [
                       TextButton(
@@ -78,7 +81,7 @@ class CommunityPageState extends State<CommunityPage> {
                         onPressed: () {
                           Navigator.of(context).pop(true); 
                         },
-                        child: Text('Sí'),
+                        child: Text('Yes'),
                       ),
                     ],
                   );
@@ -100,15 +103,16 @@ class CommunityPageState extends State<CommunityPage> {
 
       body: StreamBuilderCommunity(communityId: widget.communityId),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         transformAlignment: Alignment.center,
         alignment: Alignment.center,
         height: 80,
-        width: 150,
+        width: 300,
         decoration: BoxDecoration(color: Color(0xFF1A1A1F)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 0,
 
           children: [
             Divider(),
@@ -122,8 +126,9 @@ class CommunityPageState extends State<CommunityPage> {
             ),
 
             IconButton(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
               onPressed: () {
-                if (FirebaseAuth.instance.currentUser?.displayName != null) {
+                if (FirebaseAuth.instance.currentUser?.displayName != null && messageController.text.isNotEmpty) {
                   _chatService.sendMessage(
                     comunidadId: widget.communityId,
                     texto: messageController.text,
@@ -143,8 +148,13 @@ class CommunityPageState extends State<CommunityPage> {
                   );
                 }
               },
-              icon: Icon(Icons.send, size: 28),
+              icon: Icon(Icons.send, size: 22),
             ),
+            IconButton(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                onPressed: () {},//{ _storageRepository.uploadImage(widget.communityId); },
+                icon: Icon(Icons.attach_file, size: 22, color: Colors.white70,)
+            )
           ],
         ),
       ),

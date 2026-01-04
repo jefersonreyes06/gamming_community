@@ -14,7 +14,7 @@ class ChatService {
   }) async {
     try {
       final mensaje = Message(
-        //id: '', // Firestore generará el ID
+        communityId: comunidadId,
         texto: texto,
         usuarioId: usuarioId,
         usuarioNombre: usuarioNombre,
@@ -37,17 +37,16 @@ class ChatService {
     }
   }
 
-  Stream<List<Message>> getAllMesagges(String comunidadId) {
+  Stream<List<Message>> getAllMessages(String communityId) {
     return _firestore
         .collection('communities')
-        .doc(comunidadId)
+        .doc(communityId)
         .collection('messages')
         .orderBy('CreatedAt', descending: false)
+        .limit(10)
         .snapshots()
         .map((snapshot) =>
-        snapshot.docs
-            .map((doc) => Message.fromFirestore(doc))
-            .toList());
+        snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList());
   }
 
   Future<String?> getLastMessage(String comunidadId) async
@@ -152,7 +151,7 @@ class ChatService {
   }
 
 
-  Future<void> JoinOrLeaveCommunity({
+  Future<void> joinOrLeaveCommunity({
     required Communities community,
     required String userId,
     required bool isMember

@@ -148,7 +148,7 @@ class _CustomTextFieldState extends State<CustomTextField>
           onChanged: widget.onChanged,
           decoration: InputDecoration(
             hintText: widget.hint,
-            hintStyle: const TextStyle(color: Color(0xFFB0B0B0), fontSize: 14),
+            hintStyle: const TextStyle(color: Color(0xFF000000), fontSize: 14),
             prefixIcon: widget.prefixIcon != null
                 ? Icon(
               widget.prefixIcon,

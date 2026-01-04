@@ -19,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage>
   final _passwordController1 = TextEditingController();
   bool _obscurePassword = true;
   bool _obscurePassword1 = true;
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void dispose()
@@ -215,9 +215,8 @@ class _RegisterPageState extends State<RegisterPage>
                         child: OutlinedButton(
                           onPressed: () async
                           {
-                            final user = await Auth().SignInWithGoogle(context);
-
-                            //context.go('/home');
+                            Auth().signInWithGoogle(context);
+                            context.go('/home');
                           },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(

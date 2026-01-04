@@ -1,52 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:game_community/Provider/community/communities_provider.dart';
 import 'package:game_community/Widgets/custom_card.dart';
-import 'package:game_community/Provider/communities_provider.dart';
+import 'package:game_community/src/models/communities.dart';
 
-class Stream_Builder extends StatefulWidget
+class Stream_Builder extends ConsumerStatefulWidget
 {
   const Stream_Builder({super.key});
 
   @override
-  State<Stream_Builder> createState() => Stream_BuilderState();
+  ConsumerState<Stream_Builder> createState() => Stream_BuilderState();
 }
 
-class Stream_BuilderState extends State<Stream_Builder>
+class Stream_BuilderState extends ConsumerState<Stream_Builder>
 {
   final Map<String, bool> _memberShipCache = {};
-
-
-  final communitiesProvider = CommunitiesProvider();
   final FirebaseAuth user = FirebaseAuth.instance;
 
   @override
-  Widget build(BuildContext context)
-  {
-    return StreamBuilder< QuerySnapshot >(
-      stream: FirebaseFirestore.instance.collection('communities').snapshots(),
-      builder: (context, communitySnapshot) {
-        if (!communitySnapshot.hasData) { return Center(child: CircularProgressIndicator()); }
+  Widget build(BuildContext context) {
+    final communities = ref.watch(allCommunitiesProvider);
 
-        final List<QueryDocumentSnapshot> communities = communitySnapshot.data!.docs;
+    return communities.when(
+        data: (communities) => ListView.builder(
+            itemCount: communities.length,
+            itemBuilder: (context, i) {
+              final Communities community = communities[i];
 
-        return ListView.builder(
-          itemCount: communities.length,
-          itemBuilder: (context, i) {
-            final QueryDocumentSnapshot community = communities[i];
-            final communityId = community.id;
+              final communityId = community.id;
 
-            if (!_memberShipCache.containsKey(communityId)) {
-              _checkMemberShip(communityId, user.currentUser!.uid);
+              if (!_memberShipCache.containsKey(communityId)) {
+                _checkMemberShip(communityId, user.currentUser!.uid);
+              }
+
+              return CustomCard(
+                  community: community, isMember: _memberShipCache[communityId] ?? false,
+                  onToggleMemberShip: () => _toggleMemberShip(community, user.currentUser!.uid)
+              );
             }
-
-            return CustomCard(communityDoc: community, isMember: _memberShipCache[communityId] ?? false,
-                onToggleMemberShip: () => _toggleMemberShip(community, user.currentUser!.uid)
-            );
-
-          }
-        );
-      }
+        ),
+        error: (e, _) => Text(e.toString()),
+        loading: () => CircularProgressIndicator()
     );
   }
 
@@ -65,7 +61,7 @@ class Stream_BuilderState extends State<Stream_Builder>
     }
   }
 
-    void _toggleMemberShip(QueryDocumentSnapshot community, String userId) async {
+    void _toggleMemberShip(Communities community, String userId) async {
       final currentStatus = _memberShipCache[community.id] ?? false;
       //print("Toggle eject $currentStatus");
 
@@ -101,7 +97,7 @@ class Stream_BuilderState extends State<Stream_Builder>
               .doc(community.id)
               .set({
           'communityId': community.id,
-          'name': community['name'],
+          'name': community.name,
           'joinedAt': FieldValue.serverTimestamp()
           }),
 

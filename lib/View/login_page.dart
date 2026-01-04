@@ -2,76 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:game_community/Widgets/custom_text_field.dart';
 import 'package:game_community/Provider/auth.dart';
-/*
-class LoginPage extends StatelessWidget
-{
-  Auth currentUser = Auth();
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      /*appBar: AppBar(
-        title: Text("Login"),
-      ),*/
-      body:Container(
-        alignment: Alignment(Alignment.center.x, Alignment.center.y),
-        decoration: BoxDecoration(color: Colors.white),
-
-        child: Container(
-          decoration: BoxDecoration(color: Colors.lightBlue[200], borderRadius: BorderRadius.all(Radius.circular(20))),
-          width: 320,
-          height: 500,
-          padding: EdgeInsets.all(20),
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 15,
-
-            children:
-            [
-              SizedBox(height: 10,),
-              Text("Login", textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-
-              SizedBox(height: 5,),
-              //IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.home)),
-              CustomTextField(label: "Email", borderRadius: 30, height: 38,),
-              CustomTextField(label: "Password", borderRadius: 30, height: 38,),
-              Column(
-                children:
-                [
-                  Text("You don`t have an account? Register now",),
-                  TextButton(onPressed: () => context.go('/register'), child: Text("Click here.", textAlign: TextAlign.start,)),
-                ]
-              ),
-              TextButton(onPressed: () {currentUser.registerUser("jefersonalexanderreyeslopez@gmail.com","Hola1234.", context);}, child: Text("Log In"), style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white)),),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.onetwothree_rounded)),
-                  IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.panorama_photosphere_select_sharp)),
-                  IconButton(onPressed: () {context.go('/home');}, icon: Icon(Icons.panorama_photosphere_select_sharp)),
-                ],
-              ),
-
-            ]
-          )
-        )
-
-
-
-      ),
-
-    );
-  }
-}*/
-
-
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../Widgets/custom_text_field.dart';
 
 class LoginPage extends StatefulWidget
 {
@@ -111,7 +41,7 @@ class _LoginPageState extends State<LoginPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 55),
-                      const Text('Bienvenido',
+                      const Text('Welcome',
                           style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
@@ -119,13 +49,13 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        'Inicia sesión en tu cuenta',
+                        'Login in to your account',
                         style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
                       ),
                       const SizedBox(height: 5),
                       CustomTextField(
-                        label: 'Correo electrónico',
-                        hint: 'ejemplo@gmail.com',
+                        label: 'Email',
+                        hint: 'Example@gmail.com',
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailController,
                         width: 320,
@@ -134,7 +64,7 @@ class _LoginPageState extends State<LoginPage>
                         {
                           if (value == null || value.isEmpty)
                           {
-                            return 'Por favor ingresa tu correo';
+                            return 'Please enter your email address';
                           }
 
                           return null;
@@ -142,9 +72,9 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       const SizedBox(height: 20),
 
-                      // Campo de contraseña
+                      // Password field
                       CustomTextField(
-                        label: 'Contraseña',
+                        label: 'Password',
                         hint: '••••••••',
                         obscureText: _obscurePassword,
                         controller: _passwordController,
@@ -160,7 +90,7 @@ class _LoginPageState extends State<LoginPage>
                         validator: (value)
                         {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor ingresa tu contraseña';
+                            return 'Please enter your password';
                           }
                           if (value.length < 6) {
                             return 'La contraseña debe tener al menos 6 caracteres';
@@ -195,12 +125,8 @@ class _LoginPageState extends State<LoginPage>
                           (
                           onPressed: ()
                           {
-
-
                             final Auth auth = Auth  ();
-                            auth.SignInWithEmailAndPassword(_emailController.text, _passwordController.text, context);
-
-                            //auth.registerUser(_emailController.text, _passwordController.text, context);
+                            auth.signInWithEmailAndPassword(_emailController.text, _passwordController.text, context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(255, 46, 106, 235),
@@ -266,7 +192,7 @@ class _LoginPageState extends State<LoginPage>
                         child: OutlinedButton(
                           onPressed: () async
                           {
-                            final user = await Auth().SignInWithGoogle(context);
+                            Auth().signInWithGoogle(context);
                           },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(

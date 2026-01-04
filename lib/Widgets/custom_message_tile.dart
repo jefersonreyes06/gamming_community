@@ -1,32 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:game_community/Widgets/pop_menu_button.dart';
+import 'package:go_router/go_router.dart';
+import '../src/models/communities.dart';
+import '../src/utils/utils.dart';
 
 class MessageTile extends StatelessWidget {
-  final String userName;
-  final String message;
-  final String date;
+  final Message messageData;
   final Image icon;
   final bool unread;
 
   const MessageTile({
     super.key,
-    required this.userName,
-    required this.message,
-    required this.date,
+    required this.messageData,
     required this.icon,
     this.unread = false,
   });
+
   @override
   Widget build(BuildContext context) {
-    final bool isMe =
-        userName == FirebaseAuth.instance.currentUser!.displayName;
+    final bool isMe = messageData.usuarioId ==
+        FirebaseAuth.instance.currentUser!.uid;
 
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.7,
+            maxWidth: MediaQuery
+                .of(context)
+                .size
+                .width * 0.7,
           ),
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -40,61 +45,101 @@ class MessageTile extends StatelessWidget {
                 bottomRight: isMe ? Radius.zero : const Radius.circular(14),
               ),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!isMe) ...[
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: const Color(0xFF1A1A1F),
-                    child: icon,
-                  ),
-                  const SizedBox(width: 10),
-                ],
+            child: GestureDetector(
+              onTap: () {
+                // if i sent the message then a menu will appear to edit or delete the message
+                if (isMe) {
+                  // Mostrar menú simple con showMenu
+                  final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                  final button = context.findRenderObject() as RenderBox;
 
-                /// CONTENIDO
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// Username + fecha
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              userName,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Text(
-                            date,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.white38,
-                            ),
-                          ),
-                        ],
+                  showMenu<String>(
+                    context: context,
+                    position: RelativeRect.fromRect(
+                      Rect.fromPoints(
+                        button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                        button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
                       ),
-
-                      const SizedBox(height: 6),
-
-                      /// MENSAJE
-                      Text(
-                        message,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFFDDDDDD),
-                        ),
-                      ),
+                      Offset.zero & overlay.size,
+                    ),
+                    items: [
+                      PopupMenuItem(value: 'delete', child: Text('Delete Message')),
                     ],
+                  ).then((value) {
+                    if (value == 'delete') {
+                      Utils.showConfirm(
+                        context: context,
+                        confirmButton: () {
+                          FirebaseFirestore.instance
+                              .collection('communities')
+                              .doc(messageData.communityId)
+                              .collection('messages')
+                              .doc(messageData.id)
+                              .delete();
+                          context.pop();
+                        },
+                      );
+                    }
+                  });
+                }
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isMe == false) ...[
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: const Color(0xFF1A1A1F),
+                      child: icon,
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+
+                  /// CONTENIDO
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        /// Username + fecha
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                messageData.usuarioNombre,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              messageData.createdAt.toString(),
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.white38,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        /// MENSAJE
+                        Text(
+                          messageData.texto,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFFDDDDDD),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

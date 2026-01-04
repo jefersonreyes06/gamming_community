@@ -1,17 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditProfilePage extends StatefulWidget {
+import '../Provider/storage/image_picker_service.dart';
+import '../Provider/storage/state_notifier.dart';
+import '../Provider/storage/storage_repository.dart';
+
+class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
+  ConsumerState<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   final _nameController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   bool _loading = false;
+  MediaUploadService mediaUploadService = MediaUploadService(FirebaseStorage.instance);
 
   @override
   void initState() {
@@ -25,8 +32,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  Future<void> _save() async {
-    if (_nameController.text.trim().isEmpty) return;
+  Future<void> _save(String imageUrl, String userId) async {
+    if (_nameController.text
+        .trim()
+        .isEmpty) return;
 
     setState(() => _loading = true);
 
@@ -35,6 +44,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     await _auth.currentUser!.reload();
+    mediaUploadService.savePostWithImage(imageUrl, userId);
 
     if (mounted) {
       Navigator.pop(context);
@@ -43,13 +53,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final uploadState = ref.watch(uploadNotifierProvider);
+    final imagePicker = ref.read(imagePickerServiceProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Editar perfil"),
+        title: const Text("Edit Profile"),
         actions: [
           TextButton(
-            onPressed: _loading ? null : _save,
-            child: const Text("Guardar"),
+            onPressed: _loading ? null : () {_save(uploadState.downloadUrl!, _auth.currentUser!.uid); },
+            child: const Text("Save"),
           ),
         ],
       ),
@@ -58,8 +71,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            if (uploadState.isUploading)
+              CircularProgressIndicator(
+                value: uploadState.progress,
+              ),
+            if (uploadState.error != null)
+              Text('Error: ${uploadState.error}'),
+            if (uploadState.downloadUrl != null)
+              Image.network(uploadState.downloadUrl!),
+
+            TextButton(
+                onPressed: uploadState.isUploading ? null : () async {
+                  final file = await imagePicker.pickImage();
+                  if (file != null) {
+                    ref.read(uploadNotifierProvider.notifier)
+                        .uploadImage(file, _auth.currentUser!.uid);
+                  }
+                },
+                child: Text("Choose other profile picture")
+            ),
             const Text(
-              "Nombre de usuario",
+              "User name",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -67,7 +100,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               controller: _nameController,
               maxLength: 20,
               decoration: const InputDecoration(
-                hintText: "Ingresa tu nombre",
+                hintText: "Enter your user name",
                 border: OutlineInputBorder(),
               ),
             ),

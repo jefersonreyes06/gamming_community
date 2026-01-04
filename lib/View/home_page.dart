@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:game_community/Widgets/custom_feet.dart';
-import 'package:game_community/Widgets/custom_search.dart';
 import 'package:game_community/Widgets/stream_builder_joined_communities.dart';
 import 'package:game_community/Widgets/community_card.dart';
 import 'package:game_community/Widgets/post_card.dart';

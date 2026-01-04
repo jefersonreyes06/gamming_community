@@ -3,10 +3,10 @@ import 'package:game_community/Widgets/app_bar.dart';
 import 'package:game_community/Widgets/custom_search.dart';
 import 'package:game_community/Widgets/custom_feet.dart';
 import 'package:game_community/Widgets/stream_builder.dart';
-import 'package:game_community/Provider/communities_provider.dart';
+//import 'package:game_community/Provider/community/communities_provider.dart';
 
 class SearchPage extends StatelessWidget {
-  CommunitiesProvider communitiesProvider = CommunitiesProvider();
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class SearchPage extends StatelessWidget {
                 textColor: Colors.white,
                 backgroundColor: Colors.black12,
                 title: "",
-                hintText: "Buscar comunidades",
+                hintText: "Search Communities",
                 trailingIcon: const Icon(Icons.search),
               ),
             ),
