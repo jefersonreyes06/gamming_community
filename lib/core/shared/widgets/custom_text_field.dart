@@ -122,8 +122,7 @@ class _CustomTextFieldState extends State<CustomTextField>
           {
             return Text(
               widget.label,
-              style: TextStyle
-                (
+              style: TextStyle(
                 fontSize: widget.fontSize,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -139,6 +138,10 @@ class _CustomTextFieldState extends State<CustomTextField>
           width: widget.width,
 
           child: TextFormField(
+            cursorHeight: 15,
+            cursorColor: Colors.black12,
+            textAlignVertical: TextAlignVertical.bottom,
+          textAlign: TextAlign.start,
           controller: widget.controller,
           keyboardType: widget.keyboardType,
           obscureText: _obscureText,
@@ -146,9 +149,10 @@ class _CustomTextFieldState extends State<CustomTextField>
           minLines: _obscureText ? 1 : widget.minLines,
           validator: widget.validator,
           onChanged: widget.onChanged,
+          style: const TextStyle(color: Color(0xFF000000), fontSize: 13.4),
           decoration: InputDecoration(
             hintText: widget.hint,
-            hintStyle: const TextStyle(color: Color(0xFF000000), fontSize: 14),
+            hintStyle: const TextStyle(color: Color(0xFF000000), fontSize: 13.5),
             prefixIcon: widget.prefixIcon != null
                 ? Icon(
               widget.prefixIcon,

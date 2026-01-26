@@ -1,11 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:game_community/features/auth/auth_provider.dart';
 import 'package:game_community/features/chat/widgets/custom_icon.dart';
 import 'package:game_community/core/shared/widgets/custom_text_field.dart';
 import 'package:game_community/features/chat/widgets/stream_builder_community.dart';
+import 'package:game_community/features/user/user_provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/firebase/storage_repository.dart';
 import '../../../core/shared/services/image_picker_provider.dart';
 import '../chat_provider.dart';
 
@@ -31,6 +33,11 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
     final _chatRepositoryProvider = ref.read(chatRepositoryProvider);
     final _authRepositoryProvider = ref.watch(authRepositoryProvider);
     final _imagePickerRepositoryProvider = ref.watch(imagePickerServiceProvider);
+    final auth = ref.watch(authStateProvider).value;
+    final userName = ref.watch(userProvider(auth!.id));
+    final storage = ref.watch(mediaUploadServiceProvider);
+
+    print(auth!.name!);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,15 +99,15 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
               );
 
               if (shouldLeave == true) {
-                _authRepositoryProvider.authStateChanges().listen((user) {
+
+                final user = ref.read(authStateProvider).value;
                   if (user != null) {
                     _chatRepositoryProvider.leaveCommunity(
                       communityId: widget.communityId,
-                      userId: user.uid,
+                      userId: user.id,
                     );
                     context.pop();
                   }
-                });
 
               }
 
@@ -111,20 +118,22 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
       ),
 
       body: StreamBuilderCommunity(communityId: widget.communityId),
+
+
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         transformAlignment: Alignment.center,
         alignment: Alignment.center,
         height: 80,
         width: 300,
-        decoration: BoxDecoration(color: Color(0xFF1A1A1F)),
+        decoration: const BoxDecoration(color: Color(0xFF1A1A1F)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 0,
 
           children: [
-            Divider(),
+            const Divider(),
             CustomTextField(
               label: "Write a message",
               height: 28,
@@ -137,15 +146,12 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
             IconButton(
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
               onPressed: () {
-// FirebaseAuth.instance.currentUser?.displayName != null &&
                 if (messageController.text.isNotEmpty) {
-
                   _chatRepositoryProvider.sendMessage(
                     communityId: widget.communityId,
                     textMessage: messageController.text,
-                    userId: FirebaseAuth.instance.currentUser!.uid,
-                    userName:
-                        "${FirebaseAuth.instance.currentUser!.displayName}",
+                    senderId: auth.id,
+                    senderName: userName.value!.name!,
                   );
                   messageController.clear();
                 } else {
@@ -163,9 +169,15 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
             ),
             IconButton(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                onPressed: () {
-                  _imagePickerRepositoryProvider.pickImage();
-                },//{ _storageRepository.uploadImage(widget.communityId); },
+                onPressed: () async {
+                  // Upload a file in the firebase storage
+                  File? image = await _imagePickerRepositoryProvider.pickImage();
+
+                  if (image != null) {
+                    final url = await storage.uploadImage(image, auth!.id, 'images/${auth.id}');
+                    _chatRepositoryProvider.saveFile(path: url, userId: auth.id, communityId: widget.communityId);
+                  }
+                },
                 icon: Icon(Icons.attach_file, size: 22, color: Colors.white70,)
             )
           ],

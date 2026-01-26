@@ -8,12 +8,12 @@ class Encabezado extends StatelessWidget implements PreferredSizeWidget
   final bool haveDrawer;
 
   const Encabezado({
-    Key? key,
+    super.key,
     required this.backgroundColor,
     required this.title,
     this.actions,
     this.haveDrawer = false,
-  }) : super(key: key);
+  }); //: super(key: key);
 
   @override
   Widget build(BuildContext context) {

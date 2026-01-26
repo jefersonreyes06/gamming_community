@@ -5,14 +5,19 @@ import 'package:game_community/features/home/pages/home_page.dart';
 import 'package:game_community/features/auth/pages/login_page.dart';
 import 'package:game_community/features/auth/pages/register_page.dart';
 import 'package:game_community/features/communities/pages/search_page.dart';
+import 'package:game_community/features/user/user_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'core/session/session_provider.dart';
+import 'features/auth/auth_provider.dart';
+import 'features/profile/pages/my_profile.dart';
 import 'features/profile/pages/profile_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:game_community/core/theme/dark_gamer_theme.dart';
 import 'features/profile/pages/EditProfilePage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +28,10 @@ void main() async {
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
 
+  await FirebaseAppCheck.instance.activate(
+    providerAndroid: AndroidDebugProvider(),
+  );
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -31,23 +40,18 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(sessionProvider);
-
     return MaterialApp.router(
       theme: darkGamerTheme,
       routerConfig: GoRouter(
         redirect: (context, state) {
-          final user = session.asData?.value;
+          final auth = ref.watch(authStateProvider);
           final isAuthRoute = state.matchedLocation == '/login' || state.matchedLocation == '/register';
 
-          if (user == null && !isAuthRoute) {
+          if (auth.asData?.value == null && !isAuthRoute) {
             return '/login';
+          } else {
+            return null;
           }
-
-          if (user != null && isAuthRoute) {
-            return '/home';
-          }
-          return null;
         },
         initialLocation: '/home',
         routes: [
@@ -76,7 +80,7 @@ class MyApp extends ConsumerWidget {
             name: 'community',
             builder: (context, state) {
               final communityId = state.pathParameters['id']!;
-              final communityData = state.extra as Map<String, dynamic>? ?? {};
+              final communityData = state.extra  as Map<String, dynamic>? ?? {};
 
               return CommunityPage(
                 communityId: communityId,
@@ -84,7 +88,20 @@ class MyApp extends ConsumerWidget {
               );
             },
           ),
-          GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
+          GoRoute(
+              path: '/myProfile',
+              name: 'myProfile',
+              builder: (context, state) => const MyProfilePage(),
+          ),
+          GoRoute(
+              path: '/profile/:id',
+              name: 'profile',
+              builder: (context, state) {
+                final uid = state.pathParameters['uid']!;
+
+                return ProfilePage(uid: uid);
+              }
+          ),
           GoRoute(
             path: '/edit-profile',
             builder: (context, state) => const EditProfilePage(),

@@ -39,7 +39,7 @@ class UploadNotifier extends StateNotifier<UploadState> {
     state = state.copyWith(isUploading: true, error: null);
 
     try {
-      final url = await _uploadService.uploadImage(file, userId);
+      final url = await _uploadService.uploadImage(file, userId, "");
       state = state.copyWith(
         isUploading: false,
         downloadUrl: url,

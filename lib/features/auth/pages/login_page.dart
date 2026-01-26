@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:game_community/core/session/session_provider.dart';
 import 'package:game_community/core/shared/utils/utils.dart';
 import 'package:game_community/features/auth/auth_provider.dart';
+import 'package:game_community/features/user/user_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:game_community/core/shared/widgets/custom_text_field.dart';
-
-import '../../user/user_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget
 {
@@ -22,7 +20,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void dispose()
@@ -202,6 +200,8 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           {
                             try {
                               ref.read(authControllerProvider).signInWithGoogle();
+                              //final userr = ref.read(userProvider(ref.watch(authStateProvider).value!.id));
+                              //print('User al momento de presionar el botón: ${userr.value!.name}');
                             } catch (e) {
                               Utils.showSnackBar(context: context, title: "Error logging in with google. $e");
                             }

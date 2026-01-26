@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/session/session_model.dart';
+import '../user/user_model.dart';
 import '../user/user_provider.dart';
 import 'auth_controller.dart';
 import 'auth_repository.dart';
@@ -9,10 +9,25 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(FirebaseAuth.instance);
 });
 
-final authStateProvider = StreamProvider<SessionUser?>((ref) {
+
+
+
+
+
+
+
+//  Cambiar en un futuro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+final authStateProvider = StreamProvider<UserModel?>((ref) {
   final repository = ref.watch(authRepositoryProvider);
+
   return repository.authStateChanges();
 });
+
+/*final authStateProvider = StreamProvider<UserModel?>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+
+  return repository.authStateChanges();
+});*/
 
 final authControllerProvider = Provider<AuthController>((ref) {
   return AuthController(
@@ -22,16 +37,5 @@ final authControllerProvider = Provider<AuthController>((ref) {
 });
 
 final currentUserUidProvider = Provider<String>((ref) {
-  return ref.watch(authStateProvider).value!.uid;
+  return ref.watch(authStateProvider).value!.id;
 });
-
-/*
-final currentUserEmailProvider = Provider<String?>((ref) {
-  return ref.watch(authStateProvider).value?.email;
-});
-
-final currentUserNameProvider = Provider<String?>((ref) {
-  return ref.watch(authStateProvider).value?.displayName;
-});
-*/
-//final authData =

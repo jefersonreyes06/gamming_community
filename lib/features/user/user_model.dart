@@ -3,14 +3,14 @@ import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
   final String id;
-  final String email;
-  final String name;
-  final String description;
-  final String profilePath;
-  final List<String> communityIds;
-  final List<String> followers;
-  final List<String> following;
-  final List<String> posts;
+  final String? email;
+  final String? name;
+  final String? description;
+  final String? profilePath;
+  final List<String>? communityIds;
+  final List<String>? followers;
+  final List<String>? following;
+  final List<String>? posts;
 
   const UserModel({
     required this.id,
@@ -79,7 +79,7 @@ class UserModel extends Equatable {
         email: email ?? this.email,
         name: name ?? this.name, description: description ?? this.description,
         profilePath: profilePath ?? this.profilePath, id: id,
-        communityIds: communityId ?? this.communityIds, followers: followers ?? this.followers,
+        communityIds: communityId ?? communityIds, followers: followers ?? this.followers,
         following: following ?? this.following, posts: posts ?? this.posts
     );
   }

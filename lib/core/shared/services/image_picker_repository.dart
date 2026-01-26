@@ -10,8 +10,8 @@ class ImagePickerService {
     // Pick an image from the gallery as source, and set the values of certain parameters
     final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
-        maxHeight: 1080,
-        maxWidth: 1920,
+        maxHeight: 1920,
+        maxWidth: 1080,
         imageQuality: 80
     );
 
@@ -25,8 +25,8 @@ class ImagePickerService {
   Future<File?> takePhoto() async {
     final XFile? photo = await _picker.pickImage(
       source: ImageSource.camera,
-      maxWidth: 1920,
-      maxHeight: 1080,
+      maxWidth: 1080,
+      maxHeight: 1920,
       imageQuality: 80
     );
 

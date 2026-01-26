@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget
 
 class HomePageState extends State<HomePage> {
   final PageController _pageController = PageController();
+  final TextEditingController _searchController = TextEditingController();
   double _currentPage = 0;
 
   final communities = [
@@ -52,18 +53,19 @@ class HomePageState extends State<HomePage> {
       ),
 
       drawer: Drawer(
-        width: 230,
+        width: 290,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
 
             children:
             [
               SizedBox(height: 35,),
               Text("Communities", style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
-              CustomTextField(hintText: "Search a community", trailingIcon: Icon(Icons.search),
-                  fontSize: 15, height: 25, yPadding: 0, xPadding: 17, borderRadius: 50,),
+              CustomTextField(hintText: "Search a community", trailingIcon: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                  fontSize: 15, height: 25, yPadding: 0, xPadding: 17, borderRadius: 50, searchController: _searchController,
+              ),
               Divider(),
               Row(
                 spacing: 10,

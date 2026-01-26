@@ -25,27 +25,29 @@ class Stream_BuilderState extends ConsumerState<Stream_Builder> {
     return communities.when(
         data: (communities) =>
             ListView.builder(
-                itemCount: communities.length,
+                itemCount: 7, /////////////////////////////////////////sa kmk
                 itemBuilder: (context, i) {
                   final Communities community = communities[i];
 
                   final communityId = community.id;
 
                   if (!_memberShipCache.containsKey(communityId)) {
-                    _checkMemberShip(communityId, user.value!.uid);
+                    _checkMemberShip(communityId, user.value!.id);
                   }
 
                   return CustomCard(
                       community: community,
                       isMember: _memberShipCache[communityId] ?? false,
                       onToggleMemberShip: () =>
-                          _toggleMemberShip(community, user.value!.uid),
+                          _toggleMemberShip(community, user.value!.id),
                       memberCount: 0
                   );
                 }
             ),
         error: (e, _) => Text(e.toString()),
-        loading: () => CircularProgressIndicator()
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
     );
   }
 

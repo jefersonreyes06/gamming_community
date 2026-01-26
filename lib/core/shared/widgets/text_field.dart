@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
-  final Icon trailingIcon;
+  final IconButton trailingIcon;
   final double fontSize;
   final double height;
   final double xPadding;
   final double yPadding;
   final double borderRadius;
   final Color textColor;
+  final TextEditingController searchController;
 
   const CustomTextField({
     super.key,
@@ -19,7 +20,8 @@ class CustomTextField extends StatelessWidget {
     this.textColor = Colors.white,
     this.xPadding = 10,
     this.yPadding = 10,
-    this.borderRadius = 20
+    this.borderRadius = 20,
+    required this.searchController
   });
 
   @override
@@ -31,6 +33,7 @@ class CustomTextField extends StatelessWidget {
           textAlign: TextAlign.center,
           textAlignVertical: TextAlignVertical.bottom,
           cursorHeight: 13,
+          controller: searchController,
 
           decoration: InputDecoration(
               hintText: hintText,

@@ -25,6 +25,7 @@ dependencies:
   firestore_service_api: ^1.0.0
   firebase_storage: ^13.0.5
   equatable: ^2.0.8
+  firebase_app_check: ^0.4.1+4
 
 dev_dependencies:
   flutter_test:

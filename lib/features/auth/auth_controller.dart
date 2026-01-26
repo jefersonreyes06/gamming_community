@@ -24,8 +24,7 @@ class AuthController {
 
   Future<void> signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-    await googleSignIn.initialize(
-        serverClientId: "1000195925520-i7tabc9vhcanbnfj11qoujabkoso8p3g.apps.googleusercontent.com");
+    await googleSignIn.initialize(serverClientId: "1000195925520-i7tabc9vhcanbnfj11qoujabkoso8p3g.apps.googleusercontent.com");
 
     final GoogleSignInAccount googleAuth = await googleSignIn.authenticate();
 

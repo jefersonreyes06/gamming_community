@@ -1,41 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:game_community/features/user/user_provider.dart';
+import '../../user/user_model.dart';
 import '../chat_provider.dart';
 import 'custom_message_tile.dart';
 
 class StreamBuilderCommunity extends ConsumerWidget {
   final String communityId;
-
   const StreamBuilderCommunity({super.key, required this.communityId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(communityId);
     final messages = ref.watch(allMessagesProvider(communityId));
-    print(messages);
 
     return messages.when(
         data: (messages) => ListView.builder(
             itemCount: messages.length,
             itemBuilder: (context, i) {
-              return MessageTile(
-                messageData: messages[i],
-                icon: () {
-                  try{
-                    final String path = "letter-${messages[i].id.characters.first}.png";
-                    return Image.asset("assets/$path", width: 60, height: 60, errorBuilder: (context, error, stackTrace) => Image.asset('assets/google.png', width: 60, height: 60),);
-                  }
-                  catch (e) {
-                    Text("Error: $e");
-                    return Image.asset('assets/google.png', width: 60, height: 60);
+              final message = messages[i];
+              final user = ref.watch(allUsersProvider(message.senderId));
+
+              return user.maybeWhen(
+                data: (user) => MessageTile(
+                communityId: communityId,
+                messageData: message,
+                userData: user,
+                path: () {
+                  try {
+                    return "images/${message.senderId}/${user.profilePath}";
+                  } catch (e) {
+                    throw Exception('Upload failed $e');
                   }
                 }(),
                 unread: true,
+              ),
+                orElse: () => Center(child: CircularProgressIndicator(),)
               );
             },
         ),
         error: (e, _) => Text(e.toString()),
-        loading: () => CircularProgressIndicator()
+        loading: () => Center(child: CircularProgressIndicator()),
     );
   }
 }

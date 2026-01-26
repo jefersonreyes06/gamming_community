@@ -6,22 +6,22 @@ class Communities
   final String name;
   final String cover;
   final String description;
-  final String userMessage;
+  final String senderId;
+  final String senderName;
   final String lastMessage;
   final int membersCount;
   final int onlineCount;
-  final bool belong;
 
   Communities({
     required this.id,
     required this.name,
     this.cover = "",
     required this.description,
-    this.userMessage = '',
+    this.senderName = "",
+    this.senderId = '',
     this.lastMessage = "",
     this.membersCount = 0,
     this.onlineCount = 0,
-    this.belong = false,
   });
 
   factory Communities.fromFirestore(DocumentSnapshot doc) {
@@ -31,11 +31,11 @@ class Communities
       name: data['name'],
       cover: data['cover'] ?? "",
       description: data['description'] ?? "",
-      userMessage: data['userMessage'] ?? "",
+      senderId: data['senderId'] ?? "",
+      senderName: data['senderName'] ?? "",
       lastMessage: data['lastMessage'] ?? "",
       membersCount: data['membersCount'] ?? 0,
       onlineCount: data['onlineCount'] ?? 0,
-      belong: data['belong'] ?? false,
     );
   }
 
@@ -46,10 +46,10 @@ class Communities
       'cover': cover,
       'description': description,
       'lastMessage': lastMessage,
-      'userMessage': userMessage,
+      'senderId': senderId,
+      'senderName': senderName,
       'membersCount': membersCount,
       'onlineCount': onlineCount,
-      'belong': belong
     };
   }
 }
