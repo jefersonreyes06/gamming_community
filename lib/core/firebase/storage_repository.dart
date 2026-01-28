@@ -34,6 +34,24 @@ class MediaUploadService {
     }
   }
 
+  Future<String> uploadVideo(File file, String userId, String? path) async {
+   try {
+     String fileName = '${userId}_${DateTime.now().millisecondsSinceEpoch}.mp4';
+
+     Reference ref = _storage.ref().child("$path/$fileName");
+
+     UploadTask uploadTask = ref.putFile(file);
+
+     TaskSnapshot snapshot = await uploadTask;
+
+     String downloadUrl = await snapshot.ref.getDownloadURL();
+
+     return downloadUrl;
+   } catch (e) {
+     throw Exception('Upload failed $e');
+   }
+  }
+
   Future<String> getImageUrl(String path) async {
     try {
       Reference ref = _storage.ref().child(path);

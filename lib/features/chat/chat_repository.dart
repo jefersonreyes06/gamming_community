@@ -107,24 +107,6 @@ class ChatRepository {
     });
   }
 
-  /*
-  Future<String?> getLastMessage(String communityId) async
-  {
-    final querySnapshot = await _firestore
-        .collection('communities')
-        .doc(communityId)
-        .collection('messages')
-        .orderBy('timestamp', descending: false)
-        .limit(1).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final lastMessageData = querySnapshot.docs.first.data();
-      return lastMessageData['message'] as String?;
-    }
-
-    return "No messages";
-  }*/
-
   Future<List<Message>> getPaginatedMessages({
     required String communityId,
     required int limit,

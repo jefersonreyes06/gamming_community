@@ -30,14 +30,20 @@ class UserRepository {
     return UserModel.fromFirestore(doc);
   }
 
-  /*
-  Stream<UserModel> getUserStream(String uid) {
-    final doc = _firestore.collection('users').doc(uid).snapshots().map((doc) => UserModel.fromFirestore(doc));
-
-    return doc;
-  }*/
-
   Future<void> updateUser(UserModel user) async {
     await _firestore.collection('users').doc(user.id).update(user.toJson());
+  }
+
+  Future<void> followUser(String uid, String followId) async {
+    // Update the followers and following arrays for both users
+    // Update the followers array of the user who is being followed
+    await _firestore.collection('users').doc(followId).update({
+      'followers': FieldValue.arrayUnion([uid])
+    });
+
+    // Update the following array of the user who is following
+    await _firestore.collection('users').doc(uid).update({
+      'following': FieldValue.arrayUnion([followId])
+    });
   }
 }

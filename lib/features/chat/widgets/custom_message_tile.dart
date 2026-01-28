@@ -123,7 +123,7 @@ class MessageTile extends ConsumerWidget {
                             Navigator.of(context, rootNavigator: true).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    ProfilePage(uid: messageData.senderId),
+                                    ProfilePage(followId: messageData.senderId),
                               ),
                             );
                           }

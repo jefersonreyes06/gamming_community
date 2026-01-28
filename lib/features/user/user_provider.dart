@@ -19,12 +19,11 @@ final userProvider = FutureProvider.family<UserModel?, String?>((ref, uid) async
   return repository.getUser(uid!);
 });
 
-/*
-final allUsersProvider = FutureProvider<Map<String, UserModel>>((ref) async {
-  final Map<String, UserModel> usersCache = <String, UserModel>{};
+final updateUserProvider = FutureProvider.family<void, UserModel>((ref, user) async {
+  final repository = ref.watch(userRepositoryProvider);
 
-  return usersCache;
-});*/
+  await repository.updateUser(user);
+});
 
 final allUsersProvider = FutureProvider.family<UserModel, String>((ref, uid) async {
   if (usersCache.containsKey(uid)) {
@@ -49,50 +48,8 @@ final allUsersProvider = FutureProvider.family<UserModel, String>((ref, uid) asy
   }
 });
 
-/*
-final getUserCache = Provider.family<UserModel, String>((ref, uid) {
-  print(uid);
-  ref.watch(allUsersProvider).when(
-        data: (usersCache) {
-          try {
-            if (usersCache.containsKey(uid)) {
-              print('Data was obtained from cache');
-              return usersCache[uid]!;
-            } else {
-              print('Data was obtained from firebase store and save in cache');
-              final user = ref.watch(userProvider(uid));
+final followUserProvider = FutureProvider.family<void, ({String uid, String followId})>((ref, params) async {
+  final repository = ref.watch(userRepositoryProvider);
 
-              user.when(
-                data: (user) {
-                  usersCache[user.id] = user;
-                },
-                error: (e, _) => Text(e.toString()),
-                loading: () => null,
-              );
-
-              return user.value;
-            }
-          } catch (e) {
-            throw Exception(
-              'Error getting user with the provider GetUserCache: $e',
-            );
-          }
-        },
-        error: (e, _) => Text(e.toString()),
-        loading: () => null,
-      );
-
-  print('Se va nulo');
-  return UserModel(
-    id: '',
-    email: '',
-    name: '',
-    description: '',
-    profilePath: '',
-    communityIds: [],
-    followers: [],
-    following: [],
-    posts: [],
-  );
+  repository.followUser(params.uid, params.followId);
 });
-*/

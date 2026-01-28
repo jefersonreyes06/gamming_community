@@ -9,13 +9,6 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(FirebaseAuth.instance);
 });
 
-
-
-
-
-
-
-
 //  Cambiar en un futuro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 final authStateProvider = StreamProvider<UserModel?>((ref) {
   final repository = ref.watch(authRepositoryProvider);

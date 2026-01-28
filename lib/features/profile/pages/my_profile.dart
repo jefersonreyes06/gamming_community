@@ -7,15 +7,14 @@ import 'package:go_router/go_router.dart';
 import 'package:game_community/features/communities/state/communities_provider.dart';
 import '../../../core/firebase/storage/widgets/custom_icon.dart';
 import '../../../core/shared/widgets/custom_feet.dart';
+import 'EditProfilePage.dart';
 
 class MyProfilePage extends ConsumerWidget {
   const MyProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(
-      authRepositoryProvider,
-    ); // Functions such as Log out account provider by Auth
+    final auth = ref.watch(authRepositoryProvider,); // Functions such as Log out account provider by Auth
     final uid = ref.watch(authStateProvider.select((state) => state.value!.id));
     final userProv = ref.watch(userProvider(uid));
     if (userProv.isLoading) return Center(child: CircularProgressIndicator());
@@ -48,6 +47,7 @@ class MyProfilePage extends ConsumerWidget {
                             ),
                             radius: 36,
                           ),
+
                           //Icon(Icons.person, size: 60,),
                           SizedBox(width: 10),
                           Container(
@@ -81,6 +81,15 @@ class MyProfilePage extends ConsumerWidget {
                                     Text("Following: "),
                                     Text(user.following!.length.toString()),
                                   ],
+                                ),
+                                TextButton(onPressed: () {
+                                  context.push('/edit-profile');/*
+                                    Navigator.of(context, rootNavigator: true).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => EditProfilePage(user: user)
+                                      ));*/
+                                    },
+                                    child: Text('Edit Profile')
                                 ),
                                 Divider(),
                               ],

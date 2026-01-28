@@ -97,14 +97,18 @@ class MyApp extends ConsumerWidget {
               path: '/profile/:id',
               name: 'profile',
               builder: (context, state) {
-                final uid = state.pathParameters['uid']!;
+                final followUid = state.pathParameters['uid']!;
 
-                return ProfilePage(uid: uid);
+                return ProfilePage(followId: followUid);
               }
           ),
           GoRoute(
             path: '/edit-profile',
-            builder: (context, state) => const EditProfilePage(),
+            builder: (context, state) {
+              final user = ref.watch(userProvider(ref.read(currentUserUidProvider)));
+
+              return EditProfilePage(user: user.value!);
+              },
           ),
         ],
       ),
