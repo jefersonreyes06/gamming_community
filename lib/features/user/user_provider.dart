@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:game_community/features/user/user_model.dart';
+import '../auth/auth_provider.dart';
 import 'user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -52,4 +53,22 @@ final followUserProvider = FutureProvider.family<void, ({String uid, String foll
   final repository = ref.watch(userRepositoryProvider);
 
   repository.followUser(params.uid, params.followId);
+});
+
+final isFollowingProvider = StreamProvider.family<bool, String>((ref, targetUserId) {
+  final firestore = FirebaseFirestore.instance;
+  final currentUserId = ref.watch(currentUserUidProvider);
+
+  return firestore
+      .collection('users')
+      .doc(currentUserId)
+      .collection('following')
+      .doc(targetUserId)
+      .snapshots()
+      .map((doc) => doc.exists);
+});
+
+final followingsCountProvider = StreamProvider.family<({int followers, int following}), String>((ref, userId) {
+  final userProv = ref.watch(userRepositoryProvider);
+  return userProv.getFollowingsCount(userId);
 });

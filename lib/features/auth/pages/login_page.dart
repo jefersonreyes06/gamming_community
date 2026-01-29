@@ -126,10 +126,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         height: 48,
                         child: ElevatedButton
                           (
-                          onPressed: ()
-                          {
+                          onPressed: () async {
                             try{
-                              ref.read(authControllerProvider).signInWithEmailAndPassword(_emailController.text, _passwordController.text);
+                              await ref.read(authControllerProvider).signInWithEmailAndPassword(_emailController.text, _passwordController.text);
                             } catch(e) {
                               Utils.showSnackBar(context: context, title: "Error logging in. $e");
                             }

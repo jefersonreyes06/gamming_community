@@ -20,7 +20,10 @@ class CustomIconStorage extends StatelessWidget {
             );
           }
           if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return CircleAvatar(
+                radius: radius,
+                backgroundColor: const Color(0xFF4A0B08),
+            );
           }
           if (!snapshot.hasData) {
             return const Text('No profile');

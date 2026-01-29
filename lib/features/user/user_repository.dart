@@ -33,17 +33,77 @@ class UserRepository {
   Future<void> updateUser(UserModel user) async {
     await _firestore.collection('users').doc(user.id).update(user.toJson());
   }
+  /*
 
-  Future<void> followUser(String uid, String followId) async {
-    // Update the followers and following arrays for both users
-    // Update the followers array of the user who is being followed
-    await _firestore.collection('users').doc(followId).update({
-      'followers': FieldValue.arrayUnion([uid])
-    });
+  Future<int> getFollowersCount(String userId) async {
+    final followersAmount = await _firestore.collection('users').doc(userId).collection('followers').count().get();
 
-    // Update the following array of the user who is following
-    await _firestore.collection('users').doc(uid).update({
-      'following': FieldValue.arrayUnion([followId])
+    return followersAmount.count ?? 0;
+  }*/
+
+
+  // I think is better use a Stream for all user profile
+  Stream<({int followers, int following})> getFollowingsCount(String userId) {
+    return _firestore.collection('users').doc(userId)
+        .snapshots().map((doc) {
+       final data = doc.data();
+       return (
+        followers: data?['followersCount'] as int? ?? 0,
+        following: data?['followingCount'] as int? ?? 0);
     });
+  }
+
+  Future<void> followUser(String myId, String targetId) async {
+    final batch = _firestore.batch();
+
+    final followerRef = _firestore
+        .collection('users')
+        .doc(targetId)
+        .collection('followers')
+        .doc(myId);
+
+    final followingRef = _firestore
+        .collection('users')
+        .doc(myId)
+        .collection('following')
+        .doc(targetId);
+
+    final followersCountRef = _firestore.collection('users').doc(targetId);
+    final followingCountRef = _firestore.collection('users').doc(myId);
+
+
+    batch.update(followersCountRef, {'followersCount': FieldValue.increment(1)});
+    batch.update(followingCountRef, {'followingCount': FieldValue.increment(1)});
+    batch.set(followerRef, {'userId': myId});
+    batch.set(followingRef, {'userId': targetId});
+
+    await batch.commit();
+  }
+
+  Future<void> unfollowUser(String myId, String targetId) async {
+    final batch = _firestore.batch();
+
+    batch.delete(
+      _firestore
+          .collection('users')
+          .doc(targetId)
+          .collection('followers')
+          .doc(myId),
+    );
+
+    batch.delete(
+      _firestore
+          .collection('users')
+          .doc(myId)
+          .collection('following')
+          .doc(targetId),
+    );
+
+    final followersCountRef = _firestore.collection('users').doc(targetId);
+    final followingCountRef = _firestore.collection('users').doc(myId);
+    batch.update(followersCountRef, {'followersCount': FieldValue.increment(-1)});
+    batch.update(followingCountRef, {'followingCount': FieldValue.increment(-1)});
+
+    await batch.commit();
   }
 }

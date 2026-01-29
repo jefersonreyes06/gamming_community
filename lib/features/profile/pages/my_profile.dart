@@ -18,6 +18,13 @@ class MyProfilePage extends ConsumerWidget {
     final uid = ref.watch(authStateProvider.select((state) => state.value!.id));
     final userProv = ref.watch(userProvider(uid));
     if (userProv.isLoading) return Center(child: CircularProgressIndicator());
+
+    final isFollowingAsync = ref.watch(isFollowingProvider(uid));
+
+    final followingsCount = ref.watch(followingsCountProvider(uid));
+    if (followingsCount.isLoading) return Center(child: CircularProgressIndicator());
+    if (followingsCount.hasError) return Text(followingsCount.error.toString());
+
     final storage = ref.watch(
       mediaUploadServiceProvider,
     ); // API to get image from firebase storage and show it
@@ -75,11 +82,11 @@ class MyProfilePage extends ConsumerWidget {
                                 Row(
                                   children: [
                                     Text("Followers: "),
-                                    Text(user.followers!.length.toString()),
+                                    Text(followingsCount.value!.followers.toString()),
 
                                     SizedBox(width: 12),
                                     Text("Following: "),
-                                    Text(user.following!.length.toString()),
+                                    Text(followingsCount.value!.following.toString()),
                                   ],
                                 ),
                                 TextButton(onPressed: () {

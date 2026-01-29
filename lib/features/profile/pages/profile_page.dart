@@ -11,13 +11,23 @@ import 'EditProfilePage.dart';
 
 class ProfilePage extends ConsumerWidget {
   final String followId;
+
   const ProfilePage({super.key, required this.followId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //final followTextController = TextEditingController();
     //final auth = ref.watch(authRepositoryProvider,); // Functions such as Log out account provider by Auth
     final uid = ref.watch(authStateProvider.select((state) => state.value!.id));
-    print('uid: $uid');
+    //final user = ref.watch(userProvider(uid));
+    final isFollowingAsync = ref.watch(isFollowingProvider(followId));
+
+    final followingsCount = ref.watch(followingsCountProvider(followId));
+    if (followingsCount.isLoading) return Center(child: CircularProgressIndicator());
+    if (followingsCount.hasError) return Text(followingsCount.error.toString());
+
+    //final userProv = ref.watch(userProvider()
+    //final userProv = ref.watch(userProvider()
     final userProv = ref.watch(userProvider(followId));
     final userRepositoryProv = ref.watch(userRepositoryProvider);
     if (userProv.isLoading) return Center(child: CircularProgressIndicator());
@@ -46,7 +56,7 @@ class ProfilePage extends ConsumerWidget {
                         children: [
                           CustomIconStorage(
                             consult: storage.getImageUrl(
-                                "images/$followId/${user.profilePath}"
+                              "images/$followId/${user.profilePath}",
                             ),
                             radius: 36,
                           ),
@@ -78,19 +88,28 @@ class ProfilePage extends ConsumerWidget {
                                 Row(
                                   children: [
                                     Text("Followers: "),
-                                    Text(user.followers!.length.toString()),
+                                    Text(
+                                      followingsCount.value!.followers.toString() ?? '0',
+                                    ),
 
                                     SizedBox(width: 12),
                                     Text("Following: "),
-                                    Text(user.following!.length.toString()),
+                                    Text(
+                                      followingsCount.value!.following.toString() ?? '0',
+                                    ),
                                   ],
                                 ),
                                 // Follow
-                                TextButton(onPressed: () async {
-                                  await userRepositoryProv.followUser(uid, followId);
-                                  print('Following ${user.name}');
-                                },
-                                    child: Text('Follow')
+                                TextButton(
+                                  onPressed: () async {
+                                    if (isFollowingAsync.value == true) {
+                                      await userRepositoryProv.unfollowUser(uid, followId);
+                                    } else {
+                                      await userRepositoryProv.followUser(uid, followId);
+                                    }
+                                  },
+                                  child: Text(isFollowingAsync.value == true ? 'Unfollow' : 'Follow',
+                                  ),
                                 ),
                                 Divider(),
                               ],
@@ -140,7 +159,7 @@ class ProfilePage extends ConsumerWidget {
                                         leading: CircleAvatar(
                                           radius: 16,
                                           backgroundImage:
-                                          community.cover.isNotEmpty
+                                              community.cover.isNotEmpty
                                               ? NetworkImage(community.cover)
                                               : null,
                                           backgroundColor: const Color(
@@ -149,9 +168,9 @@ class ProfilePage extends ConsumerWidget {
                                           foregroundColor: Colors.black12,
                                           child: community.cover.isEmpty
                                               ? const Icon(
-                                            Icons.groups,
-                                            size: 16,
-                                          )
+                                                  Icons.groups,
+                                                  size: 16,
+                                                )
                                               : null,
                                         ),
                                         title: Text(
@@ -204,7 +223,7 @@ class ProfilePage extends ConsumerWidget {
 
                   // My Posts
                   Column(children: []),
-                ]
+                ],
               ),
             );
           },
